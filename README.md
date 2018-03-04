@@ -12,11 +12,10 @@ The user script addons these are (currently) tested with include:
 * ViolentMonkey 2.8.28
 
 I will not use TamperMonkey, as it is not open source software anymore, while
-ViolentMonkey is and works in pretty much every browser TamperMonkey does. That
-said, the last time I tried TamperMonkey they worked there, too.
-
-
-
+ViolentMonkey is and works in pretty much every browser TamperMonkey does.
+(That is, I recommend that you use ViolentMonkey instead since it's a viable
+alternative). That said, the last time I tried TamperMonkey the scripts worked
+there, too.
 
 All are licensed under the MIT license unless otherwise specified in the source
 code itself. (As of the commit in which I authored this readme, there are no
