@@ -21,10 +21,12 @@ All are licensed under the MIT license unless otherwise specified in the source
 code itself. (As of the commit in which I authored this readme, there are no
 exceptions - that is, all are MIT licensed).
 
-To install a script, click the "raw" button on a script's source page. Note
-that as of now, none of them will ever update automatically; if you use any of
-these and something has broken, you will have to either come back here to check
-if I've fixed the problem, or fix it yourself.
+To install a script, click the "raw" button on a script's source page.
+
+Currently, the rule34 ad blocker is not working in Chrome due to a bug in the
+browser itself. The ViolentMonkey and TamperMonkey developers appear to be
+waiting for a fix. However, it does work in FF58 as well as older versions (as
+well as Seamonkey) when using Greasemonkey.
 
 (If you fix a problem with my scripts, make them better quality, or anything
 else, and you'd like to share, please don't hesitate to make a pull request

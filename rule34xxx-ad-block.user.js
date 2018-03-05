@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        r34 block bottom ads
 // @namespace   dragontamer8740.fuckExoclick
-// @description Block ads below paginator on r34.xxx (eventually other boorus too)
+// @description Block ads below paginator on r34.xxx (eventually other boorus too). Works in Firefox and SeaMonkey, but does NOT work in Chrome as of this writing due to a bug in Chrome.
 // @version     1
 // @include     https://rule34.xxx/*
 // @match       https://rule34.xxx/*
