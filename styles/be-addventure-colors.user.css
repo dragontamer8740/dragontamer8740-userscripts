@@ -1,0 +1,13 @@
+@-moz-document url-prefix(http://old.bearchive.com/~addventure/),url-prefix(https://old.bearchive.com/~addventure/)
+{
+  body{
+    color: #afafaf;
+    background-color: #252525;
+  }
+  a{
+    color: #4F78D2;
+   }
+  a:visited{
+    color: #A36DAA;
+  }
+}
