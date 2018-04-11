@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        Add wiki, home, and forum Links
+// @name        Add wiki, home, news, and forum Links
 // @namespace   dragontamer8740.exhWikiLink
-// @description Add links to the wiki, forum, and user home pages to X
+// @description Add links to the wiki, forum, news, and user home pages to X
 // @version     1
 // @include        http://exhentai.org/*
 // @include        https://exhentai.org/*
@@ -15,12 +15,14 @@ if(document.querySelector('a[href="https://ehwiki.org/"]')==null)
   var link=[];
   var arrow=[];
   var navbar=document.getElementById("nb");
-  arrow[0]=document.createElement("img");
-  arrow[1]=document.createElement("img");
-  arrow[2]=document.createElement("img");
-  arrow[0].src="https://exhentai.org/img/mr.gif";
-  arrow[1].src="https://exhentai.org/img/mr.gif";
-  arrow[2].src="https://exhentai.org/img/mr.gif";
+  /* make arrows */
+  var i=0;
+  while(i<=3)
+  {
+    arrow[i]=document.createElement("img");
+    arrow[i].src="https://exhentai.org/img/mr.gif";
+    i++;
+  }
   link[0]=document.createElement("a");
   link[0].href="https://ehwiki.org/";
   link[0].innerHTML=" Wiki";
@@ -43,5 +45,14 @@ if(document.querySelector('a[href="https://ehwiki.org/"]')==null)
   link[2].innerHTML=" Forums";
   navbar.insertBefore(link[2], arrow[0]);
   /* add "Forums" arrow */
-  navbar.insertBefore(arrow[2], link[2])
+  navbar.insertBefore(arrow[2], link[2]);
+
+  /* add "news" button just before the "forums" button */
+  /* add "news" button */
+  link[3]=document.createElement("a");
+  link[3].href="https://e-hentai.org/news.php";
+  link[3].innerHTML=" News";
+  navbar.insertBefore(link[3], arrow[2]);
+  /* add "news" arrow */
+  navbar.insertBefore(arrow[3], link[3]);
 }
