@@ -19,12 +19,17 @@
 // ==/UserScript==
 
 //puts '-artist:"transmorpher DDS"' in the search field.
-if( document.querySelector('input[name="f_search"]').value=="")
+var searchField = document.querySelector('input[name="f_search"]');
+
+if(searchField != null)
 {
-  document.querySelector('input[name="f_search"]').value +="-artist:\"transmorpher DDS\" ";
-}
-//if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-else if( !(document.querySelector('input[name="f_search"]').value.toUpperCase().includes("-artist:\"transmorpher DDS\"".toUpperCase())) )
-{
-  document.querySelector('input[name="f_search"]').value +=" -artist:\"transmorpher DDS\" ";
+  if( searchField.value=="")
+  {
+    searchField.value +="-artist:\"transmorpher DDS\" ";
+  }
+  //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
+  else if( !(searchField.value.toUpperCase().includes("-artist:\"transmorpher DDS\"".toUpperCase())) )
+  {
+    searchField.value +=" -artist:\"transmorpher DDS\" ";
+  }
 }

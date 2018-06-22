@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        Filter out GIF Author
-// @namespace   dragontamer8740.filterGifAuthor
-// @description Filters out GIF Author galleries. I like some of his work but the current thumbnail is horrendous.
+// @name        Filter out xmrsmoothx
+// @namespace   dragontamer8740.filterxmrsmoothx
+// @description Block an awful artist
 // @version     1.0
 // @include        http://g.e-hentai.org/*
 // @include        http://e-hentai.org/*
@@ -15,20 +15,21 @@
 // @match          https://g.e-hentai.org/*
 // @match          https://e-hentai.org/*
 // @match          https://exhentai.org/*
-// @grant          none
+// @grant       none
 // ==/UserScript==
 
-//puts '-artist:"transmorpher DDS"' in the search field.
-var searchField=document.querySelector('input[name="f_search"]');
+
+//puts '-artist:"xmrsmoothx"' in the search field.
+var searchField = document.querySelector('input[name="f_search"]');
 if(searchField != null)
 {
   if( searchField.value=="")
   {
-    searchField.value +="-artist:\"GIF Author\" ";
+    searchField.value +="-artist:\"xmrsmoothx\" ";
   }
   //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-  else if( !(searchField.value.toUpperCase().includes("-artist:\"GIF Author\"".toUpperCase())) )
+  else if( !(searchField.value.toUpperCase().includes("-artist:\"xmrsmoothx\"".toUpperCase())) )
   {
-    searchField.value +=" -artist:\"GIF Author\" ";
+    searchField.value +=" -artist:\"xmrsmoothx\" ";
   }
 }
