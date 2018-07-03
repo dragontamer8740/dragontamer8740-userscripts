@@ -29,7 +29,7 @@ function addArtistFilter(name)
       searchField.value +="-artist:\"" + name + "\" ";
     }
     //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-    else if( !(searchField.value.toUpperCase().includes("-artist:\"" + name + "\"".toUpperCase())) )
+    else if( !(searchField.value.toUpperCase().includes(("-artist:\"" + name + "\"").toUpperCase())) )
     {
       searchField.value +=" -artist:\"" + name + "\" ";
     }
@@ -46,7 +46,7 @@ function addUploaderFilter(name)
       searchField.value +="-uploader:\"" + name + "\" ";
     }
     //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-    else if( !(searchField.value.toUpperCase().includes("-uploader:\"" + name + "\"".toUpperCase())) )
+    else if( !(searchField.value.toUpperCase().includes(("-uploader:\"" + name + "\"").toUpperCase())) )
     {
       searchField.value +=" -uploader:\"" + name + "\" ";
     }
@@ -56,3 +56,4 @@ function addUploaderFilter(name)
 
 addArtistFilter("xmrsmoothx");
 addUploaderFilter("OHPriest");
+addArtistFilter("justmegabenewell");
