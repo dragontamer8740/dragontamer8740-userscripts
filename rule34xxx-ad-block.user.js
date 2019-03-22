@@ -27,17 +27,32 @@
    that any non-advertisement script on these pages would need to use the code segments
    i picked. Thus the only remaining purposes are subversive or advertising, both of which
    I disapprove of. */
-   
+
+
+/* This block doesn't work anymore, but I'm keeping it here because I have the
+   suspicion I could make it work again with a little inspection. */
+
 window.addEventListener('beforescriptexecute', function(e){
   if(e.target.innerHTML.includes("addEventListener") && e.target.innerHTML.includes("appendChild"))
-     {
-       // we've got a self modifying webpage of cancer.
-       // EXTERMINATE with webpage modifying code :D
-       e.target.innerHTML="";
-       // remove our listener to make the page work better now
-       window.removeEventListener(e.type, arguments.callee, true);
-     }
+  {
+    // we've got a self modifying webpage of cancer.
+    // EXTERMINATE with webpage modifying code :D
+    e.target.innerHTML="";
+    // remove our listener to make the page work better now
+    window.removeEventListener(e.type, arguments.callee, true);
+  }
 }, true);
+
+/* https://rule34.xxx/images/hi_ublock_lets_play */
+window.addEventListener('load', function() {
+  var adscancer=document.querySelectorAll("a[target='_blank']");
+  var i=1;
+  while(i<adscancer.length){
+    adscancer[i].innerHTML="";
+    i++;
+  }
+}, false);
+
 
 
 /* hypnohub uses more tricks */
@@ -50,3 +65,11 @@ window.addEventListener('beforescriptexecute', function(e){
        window.removeEventListener(e.type, arguments.callee, true);
      }
 }, true);
+
+/* this is UGLY and probably NOT THE BEST WAY to do this */
+var adscancer=document.querySelectorAll("a[target='_blank']");
+var i=1;
+while(i<adscancer.length){
+  adscancer[i].innerHTML="";
+  i++;
+}
