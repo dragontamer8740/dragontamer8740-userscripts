@@ -14,13 +14,25 @@
 // @include     http://inkbunny.net/s/*
 // @include     https://inkbunny.net/submissionview.php*
 // @include     http://inkbunny.net/submissionview.php*
+// @include     http://e621.net/post/show/*
+// @include     https://e621.net/post/show/*
 // @version     1
 // @grant       none
 // ==/UserScript==
 
 /* to override later */
-function openImgTab(){alert("No function defined for opening the image in new tab on this page. Something's wrong.")};
-function openImgHere(){alert("No function defined for opening the image on this page. Something's wrong.")};
+function openImgTab(){
+  alert("No function defined for opening the image in new tab on this page. Something's wrong.");
+}
+function openImgHere(){
+  alert("No function defined for opening the image on this page. Something's wrong.");
+}
+function nextImg(){
+  return;
+}
+function prevImg(){
+  return;
+}
 
 /*
  * nextImg() gives the next image in the current set. If we are at the end of
@@ -30,13 +42,17 @@ function openImgHere(){alert("No function defined for opening the image on this 
  * 
  * prevImg() does the opposite of this and is bound to the left arrow key.
  */
-function nextImg(){
-  if(window.location.origin.endsWith("inkbunny.net"))
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================START INKBUNNY DEFINES==================== */
+if(window.location.origin.endsWith("inkbunny.net"))
+{
+  function nextImg()
   {
     var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var i=0;
     var nextPgLink=null;
-    /* first check for a next image in the current set */
     while(i < candidates.length)
     {
       if(candidates[i].innerHTML==="next")
@@ -46,27 +62,12 @@ function nextImg(){
       }
       i++;
     }
-    /* If the next page wasn't found, Go to the next submission instead. */
     if(nextPgLink)
     {
       window.location=nextPgLink;
     }
-    /*      else
-            {
-            nextPgLink=document.querySelectorAll("a[title='Newer']")[0].href;
-            if(nextPgLink)
-            {
-            window.location=nextPgLink;
-            }
-            }*/
-    /* don't go back to top of page - remote #pictop from url */
-    /* window.location=nextPgLink.href.match(/.*\#/)[0].replace(/\#$/,"")*/
-    
   }
-}
-
-function prevImg(){
-  if(window.location.origin.endsWith("inkbunny.net"))
+  function prevImg()
   {
     var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var i=0;
@@ -80,68 +81,123 @@ function prevImg(){
       }
       i++;
     }
-    /* don't go back to top of page - remote #pictop from url */
-    /* window.location=prevPgLink.href.match(/.*\#/)[0].replace(/\#$/,"")*/
     if(prevPgLink)
     {
       window.location=prevPgLink;
     }
-    /*      else
-            { // already at start of set, try to go to previous submission
-            prevPgLink=document.querySelectorAll("a[title='Newer']")[0].href;
-            if(prevPgLink)
-            {
-            window.location=prevPgLink;
-            }
-            }*/
   }
-}
-
-
-function nextPgXThumb(){
-  var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
-  var i=0;
-  var nextPgLink=null;
-  while(i < candidates.length)
+  function getDlLink() /* inkbunny specific since I need more logic to get the download link than w/ others */
   {
-    if(candidates[i].innerHTML==="&gt;")
-    {
-      nextPgLink=candidates[i].href;
-      i=candidates.length; /* stop iterating */
+    var dlLinkCandidates=document.querySelectorAll('a[target^="_blank"] > span');
+    var i=0;
+    var dlLink=null;
+    while(i < dlLinkCandidates.length){  
+      if(dlLinkCandidates[i].innerHTML.startsWith("Download"))
+      {
+        dlLink=dlLinkCandidates[i].parentNode.href;
+        i=dlLinkCandidates.length; /* stop iterating */
+      }
+      if(!dlLink) /* if there is no 'download' button */
+      {
+        dlLink=document.getElementById("magicbox").src;
+      }
+      i++;
     }
-    i++;
+    return dlLink;
   }
-  /* If the next page wasn't found, Go to the next submission instead. */
-  if(nextPgLink)
+  
+  function openImgTab()
   {
-    window.location=nextPgLink;
-  }
-}
-
-function prevPgXThumb(){
-  var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
-  var i=0;
-  var prevPgLink=null;
-  while(i < candidates.length)
-  {
-    if(candidates[i].innerHTML==="&lt;")
+    var dlLink=getDlLink();
+    if(dlLink)
     {
-      prevPgLink=candidates[i].href;
-      i=candidates.length; /* stop iterating */
+      window.open(dlLink);
     }
-    i++;
+    else
+    {
+      // full image is already being viewed; there is no "download original" button
+      console.log("Cannot find a download link. Might need to update or fix the script?");
+    }
   }
-  if(prevPgLink)
-  {
-    window.location=prevPgLink;
+
+  function openImgHere(){
+    var dlLink=getDlLink();
+    if(dlLink)
+    {
+      window.location=dlLink;
+    }
+    else
+    {
+      // full image is already being viewed; there is no "download original" button
+      console.log("Cannot find a download link. Might need to update or fix the script?");
+    }
   }
 }
+/* ====================END INKBUNNY DEFINES==================== */
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-if( Boolean(window.location.origin.endsWith("exhentai.org") | window.location.origin.endsWith("e-hentai.org")))
+/* ====================BEGIN EHG DEFINES==================== */
+else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.location.origin.endsWith("e-hentai.org")))
 {
+  /* nextImg() and prevImg() have functionality the site already covers. But for the gallery
+     thumbnails view we can page left and right using the same nav keys so we have to handle
+     that for gallery pages specifically. */
+  function nextImg()
+  {
+    var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
+    if(urlwoprot.startsWith("exhentai.org/g/") | urlwoprot.startsWith("e-hentai.org/g/"))
+    {
+      nextPgXThumb();
+    }
+    /* don't do anything if not on a /g/ page (let it handle things) */
+  }
+  function prevImg()
+  {
+    var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
+    if(urlwoprot.startsWith("exhentai.org/g/") | urlwoprot.startsWith("e-hentai.org/g/"))
+    {
+      prevPgXThumb();
+    }
+    /* don't do anything if not on a /g/ page (let it handle things) */
+  }
+  function nextPgXThumb(){ /* go to next page of thumbnails for a gallery on ehg */
+    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var i=0;
+    var nextPgLink=null;
+    while(i < candidates.length)
+    {
+      if(candidates[i].innerHTML==="&gt;")
+      {
+        nextPgLink=candidates[i].href;
+        i=candidates.length; /* stop iterating */
+      }
+      i++;
+    }
+    /* If the next page wasn't found, Go to the next submission instead. */
+    if(nextPgLink)
+    {
+      window.location=nextPgLink;
+    }
+  }
+  function prevPgXThumb(){ /* go to previous page of thumbnails for a gallery on ehg */
+    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var i=0;
+    var prevPgLink=null;
+    while(i < candidates.length)
+    {
+      if(candidates[i].innerHTML==="&lt;")
+      {
+        prevPgLink=candidates[i].href;
+        i=candidates.length; /* stop iterating */
+      }
+      i++;
+    }
+    if(prevPgLink)
+    {
+      window.location=prevPgLink;
+    }
+  }
   function openImgTab(){
     var dlLink=document.querySelector("div#i7 > a");
     if(dlLink)
@@ -168,114 +224,107 @@ if( Boolean(window.location.origin.endsWith("exhentai.org") | window.location.or
     }
   }
 }
-else if(window.location.origin.endsWith("inkbunny.net"))
+/* ====================END EHG DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================BEGIN E621 DEFINES==================== */
+else if(window.location.origin.endsWith("e621.net"))
 {
-  function getDlLink()
+  function nextImg()
   {
-    var dlLinkCandidates=document.querySelectorAll('a[target^="_blank"] > span');
     var i=0;
-    var dlLink=null;
-    while(i < dlLinkCandidates.length){  
-      if(dlLinkCandidates[i].innerHTML.startsWith("Download"))
+    var candidates=document.querySelectorAll("li > a[href^='/post/show']");
+    var nextPgLink=null;
+    while(i<candidates.length)
+    {
+      if(candidates[i].innerHTML==="Next")
       {
-        dlLink=dlLinkCandidates[i].parentNode.href;
-        i=dlLinkCandidates.length; /* stop iterating */
-      }
-      if(!dlLink) /* if there is no 'download' button */
-      {
-        dlLink=document.getElementById("magicbox").src;
+        nextPgLink=candidates[i].href;
+        i=candidates.length;
       }
       i++;
     }
-    return dlLink;
-  }
-  
-  function openImgTab(){
-    var dlLink=getDlLink();
-    if(dlLink)
-    {
-      window.open(dlLink);
-    }
-    else
-    {
-      // full image is already being viewed; there is no "download original" button
-      console.log("Cannot find a download link. Might need to update or fix the script?");
+    if(nextPgLink){
+      window.location=nextPgLink;
     }
   }
-  function openImgHere(){
-    var dlLink=getDlLink();
-    if(dlLink)
+  function prevImg()
+  {
+    var i=0;
+    var candidates=document.querySelectorAll("li > a[href^='/post/show']");
+    var prevPgLink=null;
+    while(i<candidates.length)
     {
-      window.location=dlLink;
+      if(candidates[i].innerHTML==="Previous")
+      {
+        prevPgLink=candidates[i].href;
+        i=candidates.length;
+      }
+      i++;
+    }
+    if(prevPgLink){
+      window.location=prevPgLink;
+    }
+  }
+  function openImgTab()
+  {
+    var i=0;
+    var candidates=document.querySelectorAll("a#highres");
+    while(i<candidates.length){
+      if(candidates[i].href)
+      {
+        var dlLink=candidates[i].href;
+        i=candidates.length;
+        window.open(dlLink);
+      }
+      i++;
+    }
+  }
+
+  function openImgHere()
+  {
+    var i=0;
+    var candidates=document.querySelectorAll("a#highres");
+    while(i<candidates.length){
+      if(candidates[i].href)
+      {
+        var dlLink=candidates[i].href;
+        i=candidates.length;
+        window.location=dlLink;
+      }
+      i++;
     }
   }
 }
+/* ====================END E621 DEFINES==================== */
 
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* register hotkeys */
 window.onkeyup = function(event) {
+  /* if we aren't inputting text on the page: */
   if(document.activeElement.tagName != "INPUT")
   {
     var key=event.which||event.keyCode;
     switch(key){
-    case 73:
+    case 73: /* 'i' */
       event.preventDefault();
       openImgTab();
       break;
-    case 79:
+    case 79: /* 'o' */
       event.preventDefault();
       openImgHere();
       break;
-    case 39: /* right arrow */ /* already works in ehg without any work on my part. Site-specific. */
-      if(window.location.origin.endsWith("inkbunny.net"))
-      {
-        nextImg();
-      }
-      else
-      {
-        /* strip protocol from url */
-        var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
-        if(urlwoprot.startsWith("exhentai.org/g/") | urlwoprot.startsWith("e-hentai.org/g/"))
-        {
-          nextPgXThumb();
-        }
-      } 
+    case 39: /* right arrow */
+      nextImg();
       break;
     case 37: /* left arrow */
-      if(window.location.origin.endsWith("inkbunny.net"))
-      {
-        prevImg();
-      }
-      else
-      {
-        /* strip protocol from url */
-        var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
-        if(urlwoprot.startsWith("exhentai.org/g/") | urlwoprot.startsWith("e-hentai.org/g/"))
-        {
-          prevPgXThumb();
-        }
-      }
+      prevImg();
       break;
     }
   }
 }
-
-
-
-// This requires an addon like "inline disposition" to work as I intend.
-// There are addons that accomplish this for both FF57+ and older versions.
-// Seamonkey also can be used with the older type Firefox addon, when run
-// through the seamonkey extension converter
-
-/* try to get original download button if the image has one */
-/*
-  var dlLink=document.querySelector("div#i7 > a");
-  if(dlLink)
-  {
-  window.open(dlLink.href);
-  }
-  else
-  {
-  // full image is already being viewed; there is no "download original" button
-  window.open(document.querySelector("div#i3 > a > img").src);
-  }
-*/
