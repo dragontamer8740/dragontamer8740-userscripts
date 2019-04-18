@@ -18,6 +18,10 @@
 // @include     https://e621.net/post/show/*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
+// @include     http://*.hentai-foundry.com/pictures/user/*/*/*
+// @include     http://hentai-foundry.com/pictures/user/*/*/*
+// @include     https://*.hentai-foundry.com/pictures/user/*/*/*
+// @include     https://hentai-foundry.com/pictures/user/*/*/*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -370,6 +374,30 @@ else if( window.location.origin.endsWith("rule34.xxx") && /\?s\=view|&s\=view/i.
 /* ====================END R34.XXX DEFINES==================== */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================BEGIN HF DEFINES==================== */
+else if(window.location.origin.endsWith("hentai-foundry.com"))
+{
+  function openImgTab(){
+    /* alternative selector: "section#picBox > div.boxbody > img" */
+    var img=document.querySelector("section#picBox img.center");
+    if(img.src)
+    {
+      window.open(img.src);
+    }
+  }
+  function openImgHere(){
+    var img=document.querySelector("section#picBox img.center");
+    if(img.src)
+    {
+      window.location=img.src;
+    }
+  }
+}
+/* ====================END HF DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* register hotkeys */
 window.onkeyup = function(event) {
   /* if we aren't inputting text on the page: */
