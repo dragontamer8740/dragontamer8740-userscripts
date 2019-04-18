@@ -16,6 +16,8 @@
 // @include     http://inkbunny.net/submissionview.php*
 // @include     http://e621.net/post/show/*
 // @include     https://e621.net/post/show/*
+// @include     http://rule34.xxx/index.php*
+// @include     https://rule34.xxx/index.php*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -300,8 +302,72 @@ else if(window.location.origin.endsWith("e621.net"))
 /* ====================END E621 DEFINES==================== */
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* ====================BEGIN R34.XXX DEFINES==================== */
+/* make sure we're on a "image view" page, not a result list etc */
+/* (found by checking url param s=view) */
+else if( window.location.origin.endsWith("rule34.xxx") && /\?s\=view|&s\=view/i.test(window.location.href) )
+{
+  var dlLink=document.querySelector("div#post-view div.sidebar div ul li a[style=\"font-weight: bold;\"").href;
+  function openImgTab()
+  {
+    if(dlLink){
+      window.open(dlLink);
+    }
+    else {
+      alert("Unable to fetch download link. Check the selector in the script.");
+    }
+  }
 
+  function openImgHere()
+  {
+    if(dlLink){
+      window.location=dlLink;
+    }
+    else {
+      alert("Unable to fetch download link. Check the selector in the script.");
+    }
+  }
+  
+  /*  function nextImg()
+      {
+      var i=0;
+      var candidates=document.querySelectorAll("li > a[href='#']");
+      var nextPgLink=null;
+      while(i<candidates.length)
+      {
+      if(candidates[i].innerHTML==="Next")
+      {
+      candidates[i].onclick(); // call the onclick the page already used
+      i=candidates.length;
+      }
+      i++;
+      }
+      if(nextPgLink){
+      window.location=nextPgLink;
+      }
+      }
+      function prevImg()
+      {
+      var i=0;
+      var candidates=document.querySelectorAll("li > a[href='#']");
+      var prevPgLink=null;
+      while(i<candidates.length)
+      {
+      if(candidates[i].innerHTML==="Previous")
+      {
+      candidates[i].onclick();
+      i=candidates.length;
+      }
+      i++;
+      }
+      if(prevPgLink){
+      window.location=prevPgLink;
+      }
+      }*/
+}
+/* ====================END R34.XXX DEFINES==================== */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* register hotkeys */
