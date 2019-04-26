@@ -22,6 +22,8 @@
 // @include     http://hentai-foundry.com/pictures/user/*/*/*
 // @include     https://*.hentai-foundry.com/pictures/user/*/*/*
 // @include     https://hentai-foundry.com/pictures/user/*/*/*
+// @include     http://*.furaffinity.net/view/*/
+// @include     https://*.furaffinity.net/view/*/
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -397,6 +399,36 @@ else if(window.location.origin.endsWith("hentai-foundry.com"))
 /* ====================END HF DEFINES==================== */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================BEGIN FA DEFINES==================== */
+else if(window.location.origin.endsWith("furaffinity.net"))
+{
+  function getFAURL(){
+    var linkCandidates=document.querySelectorAll(".actions a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Download")
+      {
+        linkurl=linkCandidates[i].href;
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    return linkurl;
+  }
+  function openImgHere(){
+    window.location=getFAURL();
+  }
+  function openImgTab(){
+    window.open(getFAURL());
+  }
+}
+/* ====================END FA DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /* register hotkeys */
 window.onkeyup = function(event) {
