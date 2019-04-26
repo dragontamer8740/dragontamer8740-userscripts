@@ -424,6 +424,15 @@ else if(window.location.origin.endsWith("furaffinity.net"))
   function openImgTab(){
     window.open(getFAURL());
   }
+  function nextImg()
+  {
+    window.location=document.querySelector(".next").href;
+  }
+  function prevImg()
+  {
+    window.location=document.querySelector(".prev").href;
+  }
+  
 }
 /* ====================END FA DEFINES==================== */
 
