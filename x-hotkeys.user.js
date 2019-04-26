@@ -424,11 +424,14 @@ else if(window.location.origin.endsWith("furaffinity.net"))
   function openImgTab(){
     window.open(getFAURL());
   }
-  function nextImg()
+  
+  /* nextImg and prevImg are swapped on FA to align with the directions of the
+  nav buttons. So next will go to the previous image */
+  function prevImg()
   {
     window.location=document.querySelector(".next").href;
   }
-  function prevImg()
+  function nextImg()
   {
     window.location=document.querySelector(".prev").href;
   }
