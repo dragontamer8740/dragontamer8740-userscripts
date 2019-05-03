@@ -24,6 +24,10 @@
 // @include     https://hentai-foundry.com/pictures/user/*/*/*
 // @include     http://*.furaffinity.net/view/*/
 // @include     https://*.furaffinity.net/view/*/
+// @include     http://gelbooru.com/index.php*
+// @include     https://gelbooru.com/index.php*
+// @include     http://chan.sankakucomplex.com/post/show/*
+// @include     https://chan.sankakucomplex.com/post/show/*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -426,7 +430,7 @@ else if(window.location.origin.endsWith("furaffinity.net"))
   }
   
   /* nextImg and prevImg are swapped on FA to align with the directions of the
-  nav buttons. So next will go to the previous image */
+     nav buttons. So next will go to the previous image */
   function prevImg()
   {
     window.location=document.querySelector(".next").href;
@@ -441,6 +445,56 @@ else if(window.location.origin.endsWith("furaffinity.net"))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* ====================BEGIN GELBOORU DEFINES==================== */
+
+else if(window.location.origin.endsWith("gelbooru.com"))
+{
+  function getGBURL(){
+    var linkCandidates=document.querySelectorAll("div li a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Original image")
+      {
+        linkurl=linkCandidates[i].href;
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    return linkurl;
+  }
+  
+  function openImgHere(){
+    window.location=getGBURL();
+  }
+  function openImgTab(){
+    window.open(getGBURL());
+  }  
+}
+
+/* ====================END GELBOORU DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================BEGIN SANKAKUCOMPLEX DEFINES==================== */
+else if(window.location.origin.endsWith("chan.sankakucomplex.com"))
+{
+  function getSKURL(){
+    return document.querySelector("a#highres").href;
+  }
+  
+  function openImgHere(){
+    window.location=getSKURL();
+  }
+  function openImgTab(){
+    window.open(getSKURL());
+  }  
+}
+/* ====================END SANKAKUCOMPLEX DEFINES==================== */
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* register hotkeys */
 window.onkeyup = function(event) {
