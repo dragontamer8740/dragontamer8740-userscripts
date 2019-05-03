@@ -317,29 +317,72 @@ else if(window.location.origin.endsWith("e621.net"))
 /* ====================BEGIN R34.XXX DEFINES==================== */
 /* make sure we're on a "image view" page, not a result list etc */
 /* (found by checking url param s=view) */
-else if( window.location.origin.endsWith("rule34.xxx") && /\?s\=view|&s\=view/i.test(window.location.href) )
+else if( window.location.origin.endsWith("rule34.xxx"))
 {
-  var dlLink=document.querySelector("div#post-view div.sidebar div ul li a[style=\"font-weight: bold;\"").href;
-  function openImgTab()
+  if(/\?s\=view|&s\=view/i.test(window.location.href) )
   {
-    if(dlLink){
-      window.open(dlLink);
+    var dlLink=document.querySelector("div#post-view div.sidebar div ul li a[style=\"font-weight: bold;\"").href;
+    function openImgTab()
+    {
+      if(dlLink){
+        window.open(dlLink);
+      }
+      else {
+        alert("Unable to fetch download link. Check the selector in the script.");
+      }
     }
-    else {
-      alert("Unable to fetch download link. Check the selector in the script.");
-    }
-  }
 
-  function openImgHere()
-  {
-    if(dlLink){
-      window.location=dlLink;
+    function openImgHere()
+    {
+      if(dlLink){
+        window.location=dlLink;
+      }
+      else {
+        alert("Unable to fetch download link. Check the selector in the script.");
+      }
     }
-    else {
-      alert("Unable to fetch download link. Check the selector in the script.");
-    }
+    
   }
   
+  /////////// Search listing next/prev page
+  else if(/\?s\=list|&s\=list/i.test(window.location.href) )
+  {
+    function nextImg()
+    {
+      window.location=document.querySelector("a[alt='next']").href;
+    }
+    function prevImg()
+    {
+      window.location=document.querySelector("a[alt='back']").href;
+    }
+    function openImgHere()
+    {
+      return;
+    }
+    function openImgTab()
+    {
+      return;
+    }
+  }
+  else /* disable all functions */
+  {
+    function openImgHere()
+    {
+      return;
+    }
+    function openImgTab()
+    {
+      return;
+    }
+    function prevImg()
+    {
+      return;
+    }
+    function nextImg()
+    {
+      return;
+    }
+  }
   /*  function nextImg()
       {
       var i=0;
