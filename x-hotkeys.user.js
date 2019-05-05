@@ -28,6 +28,18 @@
 // @include     https://gelbooru.com/index.php*
 // @include     http://chan.sankakucomplex.com/post/show/*
 // @include     https://chan.sankakucomplex.com/post/show/*
+// @include     http://*.newgrounds.com/art/view/*/*
+// @include     https://*.newgrounds.com/art/view/*/*
+// @include     http://newgrounds.com/art/view/*/*
+// @include     https://newgrounds.com/art/view/*/*
+// @include     http://*.newgrounds.com/portal/view/*/*
+// @include     https://*.newgrounds.com/portal/view/*/*
+// @include     http://newgrounds.com/portal/view/*/*
+// @include     https://newgrounds.com/portal/view/*/*
+// @include     http://*.newgrounds.com/portal/view/*
+// @include     https://*.newgrounds.com/portal/view/*
+// @include     http://newgrounds.com/portal/view/*
+// @include     https://newgrounds.com/portal/view/*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -539,6 +551,56 @@ else if(window.location.origin.endsWith("chan.sankakucomplex.com"))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/* ====================BEGIN NEWGROUNDS DEFINES==================== */
+
+else if(window.location.origin.endsWith("newgrounds.com"))
+{
+  
+  /* bypass "adult content" warnings on flash files," since the account 
+     setting seems broken */
+  /* only tested with flash player installed. Might not work for video
+     converted versions of SWF's. */
+  if(document.querySelector(".pod-body #embed_wrapper"))
+  {
+    try{
+      unsafeWindow.checkPreroll();
+    }
+    catch(e)
+    {
+      try{
+        checkPreroll();
+      }
+      catch(e){console.log("couldn't run 'checkPreroll()' from the source page. Probably a sandboxing problem I failed to account for.")}
+    }
+  }
+
+  function getNGURL()
+  {
+    if(document.querySelector(".pod-body #embed_wrapper"))
+    {
+      /* this is a flash animation page */
+      /* only tested with flash player installed. Might not work for video
+         converted versions of SWF's. */
+      return document.querySelector(".pod-body #embed_wrapper object").data;
+    }
+    else
+    {
+      /* this is not a flash page */
+      return document.querySelector(".pod-body .image > a#portal_item_view").href;
+    }
+  }
+  function openImgHere(){
+    window.location=getNGURL();
+  }
+  function openImgTab(){
+    window.open(getNGURL());
+  }  
+}
+
+/* ====================END NEWGROUNDS DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* register hotkeys */
 window.onkeyup = function(event) {
   /* if we aren't inputting text on the page: */
