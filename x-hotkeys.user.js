@@ -10,6 +10,8 @@
 // @include     http://exhentai.org/g/*
 // @include     https://e-hentai.org/g/*
 // @include     http://e-hentai.org/g/*
+// @include     http://exhentai.org/*
+// @include     https://exhentai.org/*
 // @include     https://inkbunny.net/s/*
 // @include     http://inkbunny.net/s/*
 // @include     https://inkbunny.net/submissionview.php*
@@ -174,6 +176,13 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     {
       nextPgXThumb();
     }
+    else if(window.location.pathname == '/') /* | window.location.search.includes("f_search") */
+    {
+      /* we are on the gallery search page, so page using arrow keys. */
+      nextPgXThumb();
+    }
+    
+    
     /* don't do anything if not on a /g/ page (let it handle things) */
   }
   function prevImg()
@@ -181,6 +190,11 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
     if(urlwoprot.startsWith("exhentai.org/g/") | urlwoprot.startsWith("e-hentai.org/g/"))
     {
+      prevPgXThumb();
+    }
+    else if(window.location.pathname == '/') /* | window.location.search.includes("f_search") */
+    {
+      /* we are on the gallery search page, so page using arrow keys. */
       prevPgXThumb();
     }
     /* don't do anything if not on a /g/ page (let it handle things) */
@@ -604,7 +618,7 @@ else if(window.location.origin.endsWith("newgrounds.com"))
 /* register hotkeys */
 window.onkeyup = function(event) {
   /* if we aren't inputting text on the page: */
-  if(document.activeElement.tagName != "INPUT")
+  if(document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA" )
   {
     var key=event.which||event.keyCode;
     switch(key){
