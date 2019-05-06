@@ -42,6 +42,8 @@
 // @include     https://*.newgrounds.com/portal/view/*
 // @include     http://newgrounds.com/portal/view/*
 // @include     https://newgrounds.com/portal/view/*
+// @include     http://rule*.paheal.net/post/view/*
+// @include     https://rule*.paheal.net/post/view/*
 // @version     1
 // @grant       none
 // ==/UserScript==
@@ -614,6 +616,46 @@ else if(window.location.origin.endsWith("newgrounds.com"))
 
 /* ====================END NEWGROUNDS DEFINES==================== */
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================BEGIN R34.PAHEAL DEFINES==================== */
+else if(window.location.origin.endsWith("rule34.paheal.net"))
+{
+  function get34URL()
+  {
+    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var i=0;
+    var imgLink=null;
+    while(i < candidates.length)
+    {
+      if(candidates[i].innerHTML==="Image Only")
+      {
+        imgLink=candidates[i].href;
+        i=candidates.length; /* stop iterating */
+      }
+      i++;
+    }
+    return imgLink;
+  }
+  function openImgHere(){
+    window.location=get34URL();
+  }
+  function openImgTab(){
+    window.open(get34URL());
+  }
+  
+  
+  function prevImg()
+  {
+    window.location=document.querySelector("#prevlink").href;
+  }
+  function nextImg()
+  {
+    window.location=document.querySelector("#nextlink").href;
+  }
+  
+}
+/* ====================END R34.PAHEAL DEFINES==================== */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* register hotkeys */
 window.onkeyup = function(event) {
