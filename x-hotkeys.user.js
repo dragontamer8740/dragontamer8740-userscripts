@@ -65,10 +65,107 @@ function prevImg(){
 /*
  * nextImg() gives the next image in the current set. If we are at the end of
  * a set of images (or our set of images is 1 large), go to the next
- * submission in the gallery (on Inkbunny). This is bound to the right arrow
- * key.
+ * submission in the gallery (on Inkbunny, FA, and a few others). This is
+ * bound to the right arrow key.
  * 
  * prevImg() does the opposite of this and is bound to the left arrow key.
+ *
+ * On FA, these are swapped so that they make sense with the left/right
+ * positioning of newer/older images respectively.
+ *
+ * openImgHere() and openImgTab() open the image that is the point of focus
+ * on the given page, in its original (largest) version, either in the
+ * current loaded tab/window (for openImgHere()), or in a new tab/window
+ * (for openImgTab()).
+ *
+ * Making opening images work as expected may require installing a proper
+ * add-on, such as 'InlineDisposition Reloaded,' or 'InlineDisposition' in
+ * older versions of Firefox/forks and derivatives that allow XUL addons)
+ * so that images load in the window instead of trying to download.
+ *
+ * Opening in a new tab/window without triggering the ad blocker is only
+ * tested in Firefox-like browsers (e.g. Seamonkey, Firefox) and requires
+ * some changes to about:config to operate properly due to security problems
+ * that can arise otherwise.
+ *
+ * Change:
+ * --------------------------------------------------------------------------
+ * dom.popup_allowed_events
+ *
+ *   Description (rationale for change requirement):
+ *     My script triggers new tab creatio on the release of a keyboard key
+ *     (the `window.onkeyup`.) By default, this action is not allowed as a
+ *     'springboard' to new window/tab opening, as this would allow an easy
+ *     entry point for unwanted popups. Unfortunately, in a userscript I
+ *     cannot seem to make my script differentiated from on-page triggered
+ *     popups, so we need to add 'keyup' as an allowed event trigger.
+ *
+ *   Original value:
+ *     change click dblclick mouseup notificationclick reset submit touchend
+ *
+ *   Recommended new value:
+ *     change click dblclick mouseup notificationclick reset submit touchend keyup
+ * --------------------------------------------------------------------------
+ * dom.popup_maximum
+ *
+ *   Description (rationale for change requirement):
+ *     dom.popup_maximum sets the number of 'popups' that are allowed to be
+ *     active at any time. This includes 'popups' that are simply new tabs.
+ *     If you are opening a crap-ton of images in new tabs, you will reach
+ *     this cutoff point relatively quickly.
+ *     When this point is reached, the blocker will tell you that it blocked
+ *     the page from opening a popup, even if you had previously told the
+ *     browser to allow popups on that page/site.
+ *     Setting it to zero seems to allow an infinite number of pop-ups to
+ *     be created. Of course, if you whitelist a naughty site and do this,
+ *     you may be opening a can of worms. An ad blocker is highly, highly
+ *     recommended to be used in conjunction with this script, if you
+ *     change this to zero.
+ *
+ *   Original value:
+ *     20
+ *
+ *   Recommended new value:
+ *     0
+ *
+ *   NOTE:
+ *     In Chrome/Chromium, this appears to be set at compile-time in
+ *     `chrome/browser/ui/blocked_content/popup_blocker_tab_helper.cc` in
+ *     the variable `kMaximumNumberOfPopups`. Therefore, it seems to be 
+ *     un-changeable in the browser without recompiling it, possibly limiting
+ *     the usefulness of this script in Chrome derivatives.
+ *
+ *     I have not checked that this actually matters in the case of my
+ *     user script, though. it might be silly to even worry about.
+ *
+ * --------------------------------------------------------------------------
+ * browser.tabs.loadDivertedInBackground
+ *
+ *   Description (rationale for change option):
+ *     Setting this to true makes new tabs open in the background. This
+ *     allows for navigating to the next page in a gallery, hitting 'i' to
+ *     open in a new tab, then right key to go to the next page, followed by
+ *     'i' again.
+ *     Then, all the new tabs can be viewed at once later or saved as a
+ *     batch.
+ * 
+ *  Original value:
+ *    false
+ *
+ *  Recommended new value:
+ *    true
+ */
+
+/* SOME CHROME/CHROMIUM EXTENSION SUGGESTIONS THAT MIGHT MAKE THIS ADDON
+ * WORK BETTER:
+ * 
+ * Force Background Tab
+ *   https://chrome.google.com/webstore/detail/force-background-tab/gidlfommnbibbmegmgajdbikelkdcmcl
+ * InlineDisposition
+ *   https://chrome.google.com/webstore/detail/inlinedisposition/ojbnblcchccjnihldfnommncemiejein
+ * ViolentMonkey (to install this script in)
+ *   https://chrome.google.com/webstore/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag
+ * 
  */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +175,8 @@ if(window.location.origin.endsWith("inkbunny.net"))
 {
   function nextImg()
   {
-    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var candidates=document.getElementsByTagName("a");
     var i=0;
     var nextPgLink=null;
     while(i < candidates.length)
@@ -97,7 +195,8 @@ if(window.location.origin.endsWith("inkbunny.net"))
   }
   function prevImg()
   {
-    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var candidates=document.getElementsByTagName("a");
     var i=0;
     var prevPgLink=null;
     while(i < candidates.length)
@@ -202,7 +301,8 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     /* don't do anything if not on a /g/ page (let it handle things) */
   }
   function nextPgXThumb(){ /* go to next page of thumbnails for a gallery on ehg */
-    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var candidates=document.getElementsByTagName("a");
     var i=0;
     var nextPgLink=null;
     while(i < candidates.length)
@@ -221,7 +321,8 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     }
   }
   function prevPgXThumb(){ /* go to previous page of thumbnails for a gallery on ehg */
-    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var candidates=document.getElementsByTagName("a");
     var i=0;
     var prevPgLink=null;
     while(i < candidates.length)
@@ -623,7 +724,8 @@ else if(window.location.origin.endsWith("rule34.paheal.net"))
 {
   function get34URL()
   {
-    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    var candidates=document.getElementsByTagName("a");
     var i=0;
     var imgLink=null;
     while(i < candidates.length)
