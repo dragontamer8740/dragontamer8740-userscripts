@@ -175,7 +175,7 @@ if(window.location.origin.endsWith("inkbunny.net"))
 {
   function nextImg()
   {
-//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var candidates=document.getElementsByTagName("a");
     var i=0;
     var nextPgLink=null;
@@ -195,7 +195,7 @@ if(window.location.origin.endsWith("inkbunny.net"))
   }
   function prevImg()
   {
-//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var candidates=document.getElementsByTagName("a");
     var i=0;
     var prevPgLink=null;
@@ -301,7 +301,7 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     /* don't do anything if not on a /g/ page (let it handle things) */
   }
   function nextPgXThumb(){ /* go to next page of thumbnails for a gallery on ehg */
-//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var candidates=document.getElementsByTagName("a");
     var i=0;
     var nextPgLink=null;
@@ -321,7 +321,7 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     }
   }
   function prevPgXThumb(){ /* go to previous page of thumbnails for a gallery on ehg */
-//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var candidates=document.getElementsByTagName("a");
     var i=0;
     var prevPgLink=null;
@@ -724,7 +724,7 @@ else if(window.location.origin.endsWith("rule34.paheal.net"))
 {
   function get34URL()
   {
-//    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
+    //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
     var candidates=document.getElementsByTagName("a");
     var i=0;
     var imgLink=null;
@@ -760,7 +760,8 @@ else if(window.location.origin.endsWith("rule34.paheal.net"))
 /* ====================END R34.PAHEAL DEFINES==================== */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* register hotkeys */
-window.onkeyup = function(event) {
+window.addEventListener('keyup', function(event) {
+  //window.onkeyup = function(event) {
   /* if we aren't inputting text on the page: */
   if(document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA" )
   {
@@ -782,4 +783,4 @@ window.onkeyup = function(event) {
       break;
     }
   }
-}
+});
