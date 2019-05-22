@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 var i1=document.getElementById("i1");
-
+/* move title below image */
 var h1=document.querySelector("h1").cloneNode(true);
 document.querySelectorAll("h1")[0].setAttribute("id","toHide");
 
@@ -55,25 +55,60 @@ function fitHeight()
 {
   img=document.getElementById("img");
   img.style.width="auto";
-  img.style.height="100vh";
-  img.style.margin="0px";
-}
-
-function origSize()
-{
-  img=document.getElementById("img");
-  img.style.width="100%";
-  img.style.height="100%";
+  // don't stretch beyond 100%
+  if(document.documentElement.clientHeight <= img.naturalHeight)
+  {
+    img.style.height="100vh";
+  }
+  else
+  {
+    img.style.height="100%";
+  }
   img.style.margin="0px";
 }
 
 function fitWidth()
 {
   img=document.getElementById("img");
-  img.style.width="100vw";
+  // don't stretch beyond 100%
+  if(document.documentElement.clientWidth <= img.naturalWidth)
+  {
+    img.style.width="100vw";
+  }
+  else
+  {
+    img.style.width="100%";
+  }
+  img.style.height= "auto";
+  img.style.margin= "0px";
+}
+
+function origSize()
+{
+  img=document.getElementById("img");
+  img.style.width= "100%";
+  img.style.height="100%";
+  img.style.margin= "0px";
+}
+
+function bestFit()
+{
+  img=document.getElementById("img");
+  img.style.width= "100vw";
   img.style.height="auto";
   img.style.margin="0px";
+  var windowaspectratio=document.documentElement.clientWidth / document.documentElement.clientHeight;
+  var imgaspectratio=img.naturalWidth / img.naturalHeight;
+  if(imgaspectratio < windowaspectratio) // image ratio is taller than screen aspect ratio, so fit to height
+  {
+    fitHeight();
+  }
+  else // if (imgaspectratio >= windowaspectratio) - image ratio is wider or the same as screen ratio, so fit to width
+  {
+    fitWidth();
+  }
 }
+
 window.addEventListener('keyup', function(event) {
   /* if we aren't inputting text on the page: */
   if(document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA" )
@@ -82,21 +117,29 @@ window.addEventListener('keyup', function(event) {
     switch(key){
     case 72: /* 'h' */
       event.preventDefault();
+      window.removeEventListener("resize", bestFit, false);
       fitHeight();
       break;
       
     case 87: /* 'w' */
       event.preventDefault();
+      window.removeEventListener("resize", bestFit, false);
       fitWidth();
-      break;
-      
-      /*case 65: // a seems to be used by the page's scripts for previous
+      break;  
+      /*case 65: // a
         event.preventDefault();
+        window.addEventListener("resize", bestFit);
         origSize();
         break;*/
     case 86: /* 'v' */
       event.preventDefault();
+      window.removeEventListener("resize", bestFit, false);
       origSize();
+      break;
+    case 66: /* 'b' */
+      event.preventDefault();
+      bestFit();
+      window.addEventListener("resize", bestFit, false);
       break;
     }
   }
@@ -104,4 +147,4 @@ window.addEventListener('keyup', function(event) {
 
 
 /* AUTO FIT TO HEIGHT */
-/* to-do, will require more advanced inspection of DOM */
+/* will require more advanced inspection of DOM */
