@@ -26,6 +26,8 @@
 // @include     https://hentai-foundry.com/pictures/user/*/*/*
 // @include     http://*.furaffinity.net/view/*/
 // @include     https://*.furaffinity.net/view/*/
+// @include     http://*.furaffinity.net/gallery/*/
+// @include     https://*.furaffinity.net/gallery/*/
 // @include     http://gelbooru.com/index.php*
 // @include     https://gelbooru.com/index.php*
 // @include     http://chan.sankakucomplex.com/post/show/*
@@ -44,9 +46,15 @@
 // @include     https://newgrounds.com/portal/view/*
 // @include     http://rule*.paheal.net/post/view/*
 // @include     https://rule*.paheal.net/post/view/*
+// @include     http://*.weasyl.com/*/submissions/*
+// @include     https://*.weasyl.com/*/submissions/*
+// @include     http://*.weasyl.com/*/submissions/*/*
+// @include     https://*.weasyl.com/*/submissions/*/*
 // @version     1
-// @grant       none
+// @grant       unsafeWindow
 // ==/UserScript==
+
+//unsafeWindow needed to access these functions from another script
 
 /* to override later */
 function openImgTab(){
@@ -270,6 +278,7 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
   /* nextImg() and prevImg() have functionality the site already covers. But for the gallery
      thumbnails view we can page left and right using the same nav keys so we have to handle
      that for gallery pages specifically. */
+
   function nextImg()
   {
     var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
@@ -282,9 +291,8 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
       /* we are on the gallery search page, so page using arrow keys. */
       nextPgXThumb();
     }
-    
-    
     /* don't do anything if not on a /g/ page (let it handle things) */
+
   }
   function prevImg()
   {
@@ -408,34 +416,35 @@ else if(window.location.origin.endsWith("e621.net"))
       window.location=prevPgLink;
     }
   }
-  function openImgTab()
+  function getContentLink()
   {
     var i=0;
     var candidates=document.querySelectorAll("a#highres");
-    while(i<candidates.length){
-      if(candidates[i].href)
-      {
-        var dlLink=candidates[i].href;
-        i=candidates.length;
-        window.open(dlLink);
+    if(candidates.length > 0)
+    {
+      while(i<candidates.length){
+        if(candidates[i].href)
+        {
+          var dlLink=candidates[i].href;
+          i=candidates.length;
+          return dlLink;
+        }
+        i++;
       }
-      i++;
     }
+    else /* might be a swf? */
+    {
+      return document.querySelector("object param").getAttribute("value");
+    }
+  }
+  function openImgTab()
+  {
+    window.open(getContentLink());
   }
 
   function openImgHere()
   {
-    var i=0;
-    var candidates=document.querySelectorAll("a#highres");
-    while(i<candidates.length){
-      if(candidates[i].href)
-      {
-        var dlLink=candidates[i].href;
-        i=candidates.length;
-        window.location=dlLink;
-      }
-      i++;
-    }
+    window.location=getContentLink();
   }
 }
 /* ====================END E621 DEFINES==================== */
@@ -598,18 +607,32 @@ else if(window.location.origin.endsWith("furaffinity.net"))
     window.location=getFAURL();
   }
   function openImgTab(){
-    window.open(getFAURL());
+    window.open(getFAURL());``
   }
   
   /* nextImg and prevImg are swapped on FA to align with the directions of the
      nav buttons. So next will go to the previous image */
-  function prevImg()
+  if(window.location.href.replace(/^htt.*\:\/\/www\.furaffinity.net/,'').startsWith('/view'))
   {
-    window.location=document.querySelector(".next").href;
+    function prevImg()
+    {
+      window.location=document.querySelector(".next").href;
+    }
+    function nextImg()
+    {
+      window.location=document.querySelector(".prev").href;
+    }
   }
-  function nextImg()
+  else
   {
-    window.location=document.querySelector(".prev").href;
+    function prevImg()
+    {
+      window.location=document.querySelector(".button-link.left");
+    }
+    function nextImg()
+    {
+      window.location=document.querySelector(".button-link.right");
+    }
   }
   
 }
@@ -758,6 +781,34 @@ else if(window.location.origin.endsWith("rule34.paheal.net"))
   
 }
 /* ====================END R34.PAHEAL DEFINES==================== */
+/* =====================BEGIN WEASYL DEFINES===================== */
+else if(window.location.origin.endsWith("weasyl.com"))
+{
+  function getWeasylURL()
+  {
+    var i=0;
+    var candidates=document.getElementsByTagName("a");
+    var imgLink=null;
+    while(i < candidates.length)
+    {
+      if(candidates[i].innerHTML.endsWith("Download"))
+      {
+        imgLink=candidates[i].href;
+        i=candidates.length;
+      }
+      i++;
+    }
+    return imgLink;
+  }
+  function openImgHere(){
+    window.location=getWeasylURL();
+  }
+  function openImgTab(){
+    window.open(getWeasylURL());
+  }
+}
+/* weasyl already handles next/previous on its own*/
+/* ======================END WEASYL DEFINES====================== */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
@@ -784,3 +835,10 @@ window.addEventListener('keyup', function(event) {
     }
   }
 });
+
+
+// export for other scripts to hook
+unsafeWindow.openImgHere=openImgHere;
+unsafeWindow.openImgTab=openImgTab;
+unsafeWindow.prevImg=prevImg;
+unsafeWindow.nextImg=nextImg;
