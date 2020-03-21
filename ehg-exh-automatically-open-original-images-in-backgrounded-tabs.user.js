@@ -15,8 +15,6 @@
 // @include     https://exhentai.org/*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
-// @include     http://e621.net/post/show/*
-// @include     https://e621.net/post/show/*
 // @include     http://e621.net/posts/*
 // @include     https://e621.net/posts/*
 // @include     http://chan.sankakucomplex.com/post/show/*
@@ -50,7 +48,7 @@ else if( window.location.origin.endsWith("rule34.xxx"))
     setTimeout(doFocusCheckOpen, 3000);
   }
 }
-else if(urlwoprot.startsWith("e621.net/post/show/"))
+else if(urlwoprot.startsWith("e621.net/posts/"))
 {
   setTimeout(doFocusCheckOpen, 1500);
 }
