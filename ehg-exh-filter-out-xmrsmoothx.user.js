@@ -18,18 +18,19 @@
 // @grant       none
 // ==/UserScript==
 
-
+//Description:
 //puts '-artist:"xmrsmoothx"' in the search field.
-var searchField = document.querySelector('input[name="f_search"]');
-if(searchField != null)
+
+//avoid errors on non-search pages
+if(document.querySelector('input[name="f_search"]'))
 {
-  if( searchField.value=="")
+  if( document.querySelector('input[name="f_search"]').value=="")
   {
-    searchField.value +="-artist:\"xmrsmoothx\" ";
+    document.querySelector('input[name="f_search"]').value +="-a:\"xmrsmoothx\" ";
   }
   //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-  else if( !(searchField.value.toUpperCase().includes("-artist:\"xmrsmoothx\"".toUpperCase())) )
+  else if( !(document.querySelector('input[name="f_search"]').value.toUpperCase().includes("-a:\"xmrsmoothx\"".toUpperCase())) )
   {
-    searchField.value +=" -artist:\"xmrsmoothx\" ";
+    document.querySelector('input[name="f_search"]').value +=" -a:\"xmrsmoothx\" ";
   }
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Filter out Transmorpher DDS
-// @namespace      dragontamer8740.filterTransmorpherDDS
-// @description    Automatically removes the artist "Transmorpher DDS" from searches. His art style is subjectively terrible and his galleries are constantly being bumped to the top of results.
+// @namespace      dragontamer8740
+// @description    Automatically removes the artist "Transmorpher DDS" from searches.
 // @version        1.0
 // @include        http://g.e-hentai.org/*
 // @include        http://e-hentai.org/*
@@ -18,18 +18,18 @@
 // @grant          none
 // ==/UserScript==
 
-//puts '-artist:"transmorpher DDS"' in the search field.
-var searchField = document.querySelector('input[name="f_search"]');
+// Description:
+// puts '-artist:"transmorpher DDS"' in the search field.
 
-if(searchField != null)
+//don't cause errors in console on non-search pages
+if (document.querySelector('input[name="f_search"]')) // only if search bar exists on current page
 {
-  if( searchField.value=="")
+  if (document.querySelector('input[name="f_search"]').value == '')
   {
-    searchField.value +="-artist:\"transmorpher DDS\" ";
-  }
-  //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-  else if( !(searchField.value.toUpperCase().includes("-artist:\"transmorpher DDS\"".toUpperCase())) )
+    document.querySelector('input[name="f_search"]').value += '-a:"transmorpher DDS" ';
+  }  //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
+  else if (!(document.querySelector('input[name="f_search"]').value.toUpperCase().includes('-a:"transmorpher DDS"'.toUpperCase())))
   {
-    searchField.value +=" -artist:\"transmorpher DDS\" ";
+    document.querySelector('input[name="f_search"]').value += ' -a:"transmorpher DDS" ';
   }
 }

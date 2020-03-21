@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Filter out GIF Author
 // @namespace   dragontamer8740.filterGifAuthor
-// @description Filters out GIF Author galleries. I like some of his work but the current thumbnail is horrendous.
+// @description Filters out GIF Author galleries
 // @version     1.0
 // @include        http://g.e-hentai.org/*
 // @include        http://e-hentai.org/*
@@ -18,17 +18,19 @@
 // @grant          none
 // ==/UserScript==
 
-//puts '-artist:"transmorpher DDS"' in the search field.
-var searchField=document.querySelector('input[name="f_search"]');
-if(searchField != null)
+// Description:
+// puts '-artist:"GIF Author"' in the search field.
+
+//don't cause errors in console on non-search pages
+if(document.querySelector('input[name="f_search"]')) // only if search bar exists on current page
 {
-  if( searchField.value=="")
+  if( document.querySelector('input[name="f_search"]').value=="")
   {
-    searchField.value +="-artist:\"GIF Author\" ";
+    document.querySelector('input[name="f_search"]').value +="-a:\"GIF Author\" ";
   }
   //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-  else if( !(searchField.value.toUpperCase().includes("-artist:\"GIF Author\"".toUpperCase())) )
+  else if( !(document.querySelector('input[name="f_search"]').value.toUpperCase().includes("-a:\"GIF Author\"".toUpperCase())) )
   {
-    searchField.value +=" -artist:\"GIF Author\" ";
+    document.querySelector('input[name="f_search"]').value +=" -a:\"GIF Author\" ";
   }
 }
