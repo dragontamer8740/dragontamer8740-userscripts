@@ -9,40 +9,71 @@
 // @match          https://exhentai.org/*
 // @grant       none
 // ==/UserScript==
-/* User ID (found in URL for user profile page on forums). */
-var uid=1097716
+
+
+/* need a User ID (found in URL for user profile page on forums). */
+/* December 31 2019: try to obtain from cookies, if available. */
+function addLinks_getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+var uid=parseInt(addLinks_getCookie("ipb_member_id"));
+if(uid==null){
+  uid=0; /* Tagging log will return "No ACL Entry" if UID doesn't match your own */
+  console.log("Could not find your UID, you are probably not logged in and tagging log will not work.");
+}
+
 /* fix styling of header bar, allow larger titles to display in thumbnail mode */
-var s = document.createElement("style");
-s.type = "text/css";
-s.innerText = '#nb { flex-flow: row !important; overflow: visible !important; } .gl4t { max-height: 96px !important; }';
-document.head.appendChild(s);
+/* var s = document.createElement("style");
+   s.type = "text/css";
+   s.innerText = '#nb { flex-flow: row !important; overflow: visible !important; } .gl4t { max-height: 96px !important; }';
+   document.head.appendChild(s); */
 if(document.querySelector('a[href="https://ehwiki.org/"]')==null)
 {
   var link=[];
   var div=[];
   var navbar=document.getElementById("nb");
-  var linkNames = [ "My Tagging Log",
-                    "Wiki",
-                    "My Home",
-                    "News",
-                    "Forums"
-                  ];
-  var linkURLs  = [ "https://e-hentai.org/tools.php?act=taglist&uid="+uid,
-                    "https://ehwiki.org/",
-                    "https://e-hentai.org/home.php",
-                    "https://e-hentai.org/news.php",
-                    "https://forums.e-hentai.org/"
-                  ];
-  var i=0;
-  while(i < linkURLs.length)
+  if(navbar)
   {
-    /* add "My Tagging Log" button */
+    var linkNames = [ "My Tagging Log",
+                      "News",
+                      "Forums",
+                      "Wiki"
+                    ];
+    var linkURLs  = [ "https://e-hentai.org/tools.php?act=taglist&uid="+uid,
+                      "https://e-hentai.org/news.php",
+                      "https://forums.e-hentai.org/",
+                      "https://ehwiki.org/"
+                    ];
+    var i=0;
+    while(i < linkURLs.length)
+    {
+      /* add "My Tagging Log" button */
+      link[i]=document.createElement("a");
+      link[i].href=linkURLs[i];
+      link[i].innerHTML=linkNames[i];
+      div[i]=document.createElement("div");
+      div[i].appendChild(link[i]);
+      navbar.insertBefore(div[i], null);
+      i++;
+    }
+    /* i is now indexed one above the last item in link[] and div[].
+       Manually insert home in the correct spot since it's not at the end on ehg */
     link[i]=document.createElement("a");
-    link[i].href=linkURLs[i];
-    link[i].innerHTML=linkNames[i];
+    link[i].href="https://e-hentai.org/home.php";
+    link[i].innerHTML="My Home";
     div[i]=document.createElement("div");
     div[i].appendChild(link[i]);
-    navbar.insertBefore(div[i], null);
+    /* insert before 'manage uploads' */
+    navbar.insertBefore(div[i], document.querySelectorAll("a[href='https://exhentai.org/upload/manage.php']")[0].parentNode);
     i++;
+    /* manual i++ so if we do more manual insertion like this it continues making sense and can be function-ized maybe if
+       I've not been awake for 18 hours and I return to this */
   }
 }
