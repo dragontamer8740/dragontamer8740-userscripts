@@ -16,16 +16,16 @@
 // @include     http://inkbunny.net/s/*
 // @include     https://inkbunny.net/submissionview.php*
 // @include     http://inkbunny.net/submissionview.php*
-// @include     http://e621.net/post/show/*
-// @include     https://e621.net/post/show/*
+// @include     http://e621.net/posts/*
+// @include     https://e621.net/posts/*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
 // @include     http://*.hentai-foundry.com/pictures/user/*/*/*
 // @include     http://hentai-foundry.com/pictures/user/*/*/*
 // @include     https://*.hentai-foundry.com/pictures/user/*/*/*
 // @include     https://hentai-foundry.com/pictures/user/*/*/*
-// @include     http://*.furaffinity.net/view/*/
-// @include     https://*.furaffinity.net/view/*/
+// @include     http://*.furaffinity.net/view/*
+// @include     https://*.furaffinity.net/view/*
 // @include     http://*.furaffinity.net/gallery/*/
 // @include     https://*.furaffinity.net/gallery/*/
 // @include     http://gelbooru.com/index.php*
@@ -50,6 +50,7 @@
 // @include     https://*.weasyl.com/*/submissions/*
 // @include     http://*.weasyl.com/*/submissions/*/*
 // @include     https://*.weasyl.com/*/submissions/*/*
+// @include     https://*.wikipedia.org/wiki/File:*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -275,6 +276,34 @@ if(window.location.origin.endsWith("inkbunny.net"))
 /* ====================BEGIN EHG DEFINES==================== */
 else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.location.origin.endsWith("e-hentai.org")))
 {
+  /* Right click as shortcut for tag upvote */
+  // Right click as shortcut for upvote
+  
+  
+  
+  /*var i=0;
+    var tags=document.querySelectorAll('.gt, .gtl, .gtw');
+    while(i<tags.length){
+    var tagid=tags[i].id.toString();
+    var tag=tags[i];
+    tags[i].oncontextmenu = function (arg)
+    {
+    return function(){
+    //arg.click();
+    var onclickfn=arg.children[0].getAttribute('onclick');
+    // trim return
+    onclickfn=onclickfn.substr(onclickfn.indexOf(" ") + 1);
+    // highlight element
+    unsafeWindow.eval(onclickfn);
+    // do the upvote
+    unsafeWindow.tag_vote_up();
+    return false; // prevent normal context menu
+    }
+    }(tag)
+    i++;
+    }*/
+
+  
   /* nextImg() and prevImg() have functionality the site already covers. But for the gallery
      thumbnails view we can page left and right using the same nav keys so we have to handle
      that for gallery pages specifically. */
@@ -383,11 +412,11 @@ else if(window.location.origin.endsWith("e621.net"))
   function nextImg()
   {
     var i=0;
-    var candidates=document.querySelectorAll("li > a[href^='/post/show']");
+    var candidates=document.querySelectorAll("li > a.next");
     var nextPgLink=null;
     while(i<candidates.length)
     {
-      if(candidates[i].innerHTML==="Next")
+      if(candidates[i].innerHTML.startsWith("next"))
       {
         nextPgLink=candidates[i].href;
         i=candidates.length;
@@ -401,11 +430,11 @@ else if(window.location.origin.endsWith("e621.net"))
   function prevImg()
   {
     var i=0;
-    var candidates=document.querySelectorAll("li > a[href^='/post/show']");
+    var candidates=document.querySelectorAll("li > a.prev");
     var prevPgLink=null;
     while(i<candidates.length)
     {
-      if(candidates[i].innerHTML==="Previous")
+      if(candidates[i].innerHTML.endsWith("prev"))
       {
         prevPgLink=candidates[i].href;
         i=candidates.length;
@@ -419,22 +448,26 @@ else if(window.location.origin.endsWith("e621.net"))
   function getContentLink()
   {
     var i=0;
-    var candidates=document.querySelectorAll("a#highres");
+    //var candidates=document.querySelectorAll("a#highres");
+    var candidates=document.querySelectorAll("section#post-information > ul > li > a");
     if(candidates.length > 0)
     {
       while(i<candidates.length){
-        if(candidates[i].href)
+        if(candidates[i].parentElement.innerHTML.includes('Size'))
         {
-          var dlLink=candidates[i].href;
-          i=candidates.length;
-          return dlLink;
+          if(candidates[i].href)
+          {
+            var dlLink=candidates[i].href;
+            i=candidates.length;
+            return dlLink;
+          }
         }
         i++;
       }
     }
-    else /* might be a swf? */
+    else
     {
-      return document.querySelector("object param").getAttribute("value");
+      alert("Can't find a source link. The page layout likely changed, breaking my script.");
     }
   }
   function openImgTab()
@@ -703,7 +736,7 @@ else if(window.location.origin.endsWith("newgrounds.com"))
      converted versions of SWF's. */
   if(document.querySelector(".pod-body #embed_wrapper"))
   {
-    try{
+    try{ /* try to use greasemonkey 4 functions, then fall back on the other kind if not using GM 4 */
       unsafeWindow.checkPreroll();
     }
     catch(e)
@@ -810,6 +843,27 @@ else if(window.location.origin.endsWith("weasyl.com"))
 /* weasyl already handles next/previous on its own*/
 /* ======================END WEASYL DEFINES====================== */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/* ====================BEGIN WIKIPEDIA DEFINES==================== */
+else if(window.location.origin.endsWith(".wikipedia.org"))
+{
+  function getWikipediaURL()
+  {
+    return document.querySelector('.fullImageLink > a').href;
+  }
+  function openImgHere(){
+    window.location=getWikipediaURL();
+  }
+  function openImgTab(){
+    window.open(getWikipediaURL());
+  }
+}
+/* ====================END WIKIPEDIA DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
   //window.onkeyup = function(event) {
@@ -838,7 +892,11 @@ window.addEventListener('keyup', function(event) {
 
 
 // export for other scripts to hook
-unsafeWindow.openImgHere=openImgHere;
-unsafeWindow.openImgTab=openImgTab;
-unsafeWindow.prevImg=prevImg;
-unsafeWindow.nextImg=nextImg;
+try{
+  unsafeWindow.openImgHere=openImgHere;
+  unsafeWindow.openImgTab=openImgTab;
+  unsafeWindow.prevImg=prevImg;
+  unsafeWindow.nextImg=nextImg;
+}
+catch(e){}
+// do not report an error if not using GM 4
