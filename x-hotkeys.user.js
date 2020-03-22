@@ -16,8 +16,10 @@
 // @include     http://inkbunny.net/s/*
 // @include     https://inkbunny.net/submissionview.php*
 // @include     http://inkbunny.net/submissionview.php*
-// @include     http://e621.net/posts/*
-// @include     https://e621.net/posts/*
+// @include     http://e621.net/post/show/*
+// @include     https://e621.net/post/show/*
+// @include     http://e621.net/posts*
+// @include     https://e621.net/posts*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
 // @include     http://*.hentai-foundry.com/pictures/user/*/*/*
@@ -412,16 +414,32 @@ else if(window.location.origin.endsWith("e621.net"))
   function nextImg()
   {
     var i=0;
+    /*var candidates=document.querySelectorAll("li > a[href^='/posts/']");*/
     var candidates=document.querySelectorAll("li > a.next");
     var nextPgLink=null;
     while(i<candidates.length)
     {
+      //if(candidates[i].innerHTML==="Next")
       if(candidates[i].innerHTML.startsWith("next"))
       {
         nextPgLink=candidates[i].href;
         i=candidates.length;
       }
       i++;
+    }
+    if(candidates.length == 0) // search pages use different ids for the next/previous page buttons
+    {
+      candidates=document.querySelectorAll("li.arrow > a#paginator-next");
+      i=0;
+      while(i<candidates.length)
+      {
+        if(candidates[i].id==='paginator-next')
+        {
+          nextPgLink=candidates[i].href;
+          i=candidates.length;
+        }
+        i++;
+      }
     }
     if(nextPgLink){
       window.location=nextPgLink;
@@ -430,16 +448,32 @@ else if(window.location.origin.endsWith("e621.net"))
   function prevImg()
   {
     var i=0;
+    //var candidates=document.querySelectorAll("li > a[href^='/post/show']");
     var candidates=document.querySelectorAll("li > a.prev");
     var prevPgLink=null;
     while(i<candidates.length)
     {
+      //if(candidates[i].innerHTML==="Previous")
       if(candidates[i].innerHTML.endsWith("prev"))
       {
         prevPgLink=candidates[i].href;
         i=candidates.length;
       }
       i++;
+    }
+    if(candidates.length == 0) // search pages use different ids for the next/previous page buttons
+    {
+      candidates=document.querySelector("li.arrow > a#paginator-prev");
+      i=0;
+      while(i<candidates.length)
+      {
+        if(candidates[i].id==='paginator-prev')
+        {
+          prevPgLink=candidates[i].href;
+          i=candidates.length;
+        }
+        i++;
+      }
     }
     if(prevPgLink){
       window.location=prevPgLink;
@@ -449,35 +483,49 @@ else if(window.location.origin.endsWith("e621.net"))
   {
     var i=0;
     //var candidates=document.querySelectorAll("a#highres");
-    var candidates=document.querySelectorAll("section#post-information > ul > li > a");
-    if(candidates.length > 0)
+    var firstCheck=document.querySelector('div#image-download-link > a');
+    if(firstCheck)
+      return firstCheck.href;
+    else // a fallback method that seems to be good, usually:
     {
-      while(i<candidates.length){
-        if(candidates[i].parentElement.innerHTML.includes('Size'))
-        {
-          if(candidates[i].href)
+      var candidates=document.querySelector("section#post-information > ul > li > a");
+      if(candidates && candidates.length > 0)
+      {
+        while(i<candidates.length){
+          if(candidates[i].parentElement.innerHTML.includes('Size'))
           {
-            var dlLink=candidates[i].href;
-            i=candidates.length;
-            return dlLink;
+            if(candidates[i].href)
+            {
+              var dlLink=candidates[i].href;
+              i=candidates.length;
+              return dlLink;
+            }
           }
+          i++;
         }
-        i++;
       }
-    }
-    else
-    {
-      alert("Can't find a source link. The page layout likely changed, breaking my script.");
+      else /* might be a swf? */
+      {
+        return null;
+        // dangerous: finds first swf or other object on page.
+        // this is left over from my old script version before e621 changed its html a lot.
+        // the above stuff should work for SWFs as well now.
+        //return document.querySelector("object param").getAttribute("value");
+      }
     }
   }
   function openImgTab()
   {
-    window.open(getContentLink());
+    var url=getContentLink();
+    if(url)
+      window.open(url);
   }
 
   function openImgHere()
   {
-    window.location=getContentLink();
+    var url=getContentLink();
+    if(url)
+      window.location=url;
   }
 }
 /* ====================END E621 DEFINES==================== */
