@@ -53,6 +53,8 @@
 // @include     http://*.weasyl.com/*/submissions/*/*
 // @include     https://*.weasyl.com/*/submissions/*/*
 // @include     https://*.wikipedia.org/wiki/File:*
+// @include     http://derpibooru.org/images/*
+// @include     https://derpibooru.org/images/*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -486,7 +488,7 @@ else if(window.location.origin.endsWith("e621.net"))
     var firstCheck=document.querySelector('div#image-download-link > a');
     if(firstCheck)
       return firstCheck.href;
-    else // a fallback method that seems to be good, usually:
+    else
     {
       var candidates=document.querySelector("section#post-information > ul > li > a");
       if(candidates && candidates.length > 0)
@@ -911,6 +913,28 @@ else if(window.location.origin.endsWith(".wikipedia.org"))
 /* ====================END WIKIPEDIA DEFINES==================== */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* ====================BEGIN DERPIBOORU DEFINES==================== */
+
+if(window.location.origin.endsWith("derpibooru.org"))
+{
+  function getDerpibooruURL()
+  {
+    // this one is ugly and I don't trust it.
+    var links=document.querySelectorAll("div.stretched-mobile-links > a > .fa-download");
+    return links[links.length-1].parentElement.href;
+  }
+  function openImgHere()
+  {
+    window.location=getDerpibooruURL();
+  }
+  function openImgTab()
+  {
+    window.open(getDerpibooruURL());
+  }
+}
+
+/* ===================END DERPIBOORU DEFINES==================== */
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
