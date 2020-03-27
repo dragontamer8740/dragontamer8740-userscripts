@@ -17,6 +17,7 @@ function vh()
   return Math.min(document.documentElement.clientHeight, window.innerHeight || 0);
 }
 
+
 function fitWidth(img)
 {
   // offset for things I'm too lazy to find influencing width.
@@ -24,19 +25,25 @@ function fitWidth(img)
   var miscPadding=4;
   var currPostWidth=document.querySelectorAll(".tablebg")[0].clientWidth;
   var diff=currPostWidth-vw();
+  //var diff=84;
   
   // Fill, but don't stretch beyond 100% normal size
-  if(document.documentElement.clientWidth <= img.naturalWidth )
+  //if(document.documentElement.clientWidth <= img.naturalWidth )
+  if(document.documentElement.clientWidth-diff-miscPadding <= img.naturalWidth)
   {
-    img.setAttribute('style', 'width: '+img.naturalWidth+'px');
+    //img.setAttribute('style', 'width: '+img.naturalWidth+'px');
+    //img.setAttribute('style', 'width: '+String(document.documentElement.clientWidth-diff-miscPadding)+'px');
+    img.style.width=String(document.documentElement.clientWidth-diff-miscPadding)+'px';
   }
-  else
+/*  else
   {
     //img.setAttribute('style', 'width: 100%');
-    console.log('hi');
-    img.setAttribute('style', 'width: '+String(img.naturalWidth-diff-miscPadding)+'px');
-  }
+    //console.log('hi');
+    //img.setAttribute('style', 'width: '+img.naturalWidth+'px');
+    //img.setAttribute('style', 'width: '+String(document.documentElement.clientWidth)+'px');
+  }*/
   img.style.height= "auto";
+  //img.style.width=String(document.documentElement.clientWidth-diff-miscPadding)+'px';
 }
 
 function doFit()
