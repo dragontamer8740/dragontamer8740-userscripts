@@ -30,6 +30,8 @@
 // @include     https://*.furaffinity.net/view/*
 // @include     http://*.furaffinity.net/gallery/*/
 // @include     https://*.furaffinity.net/gallery/*/
+// @include     http://*.furaffinity.net/search/*
+// @include     https://*.furaffinity.net/search/*
 // @include     http://gelbooru.com/index.php*
 // @include     https://gelbooru.com/index.php*
 // @include     http://chan.sankakucomplex.com/post/show/*
@@ -706,7 +708,37 @@ else if(window.location.origin.endsWith("furaffinity.net"))
       window.location=document.querySelector(".prev").href;
     }
   }
-  else
+  else if(window.location.href.replace(/^htt.*\:\/\/www\.furaffinity\.net/,'').startsWith('/search'))
+  {
+    // FA uses stupid HTTP POSTs to navigate through search results.
+    // And only provides a 'more results' button, not anything to go back.
+    // stash values on page load time for later backward navigation.
+    var postField=document.querySelector('form#search-form[action="/search/"] > fieldset > input#q').parentElement;
+    var pageNum=parseInt(postField.querySelector("input#page").getAttribute('value'));
+    // make a backup of the entire contents of the search form for restoring
+    // when moving back a page.
+    // not sure if the clone is actually needed here though.
+    var fieldset=postField.cloneNode(true).innerHTML;
+    
+    function prevImg()
+    {
+      // decrement page field by 1  and click 'search' button.
+      // First, restore the values from page load time first in case user
+      // tweaks them and then wants to go back without applying changes.
+      postField.innerHTML=fieldset;
+      // decrement by one.
+      postField.querySelector("input#page").setAttribute('value',String(pageNum-1));
+      // hit search button.
+      document.querySelector("input.listbox[name='do_search']").click();
+    }
+    function nextImg()
+    {
+      // the page gives us a 'next' button, but not a 'previous' button -_-
+      // so this is much easier.
+      document.querySelector("input.button[name='next_page']").click();
+    }
+  }
+  else // on an image/content viewing page
   {
     function prevImg()
     {
@@ -933,8 +965,8 @@ if(window.location.origin.endsWith("derpibooru.org"))
     window.open(getDerpibooruURL());
   }
 }
+/* ====================END DERPIBOORU DEFINES==================== */
 
-/* ===================END DERPIBOORU DEFINES==================== */
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
