@@ -37,7 +37,6 @@ if(uid==null){
 if(document.querySelector('a[href="https://ehwiki.org/"]')==null)
 {
   var link=[];
-  var div=[];
   var navbar=document.getElementById("nb");
   if(navbar)
   {
@@ -51,29 +50,66 @@ if(document.querySelector('a[href="https://ehwiki.org/"]')==null)
                       "https://forums.e-hentai.org/",
                       "https://ehwiki.org/"
                     ];
-    var i=0;
-    while(i < linkURLs.length)
-    {
-      /* add "My Tagging Log" button */
+    
+    switch(window.location.pathname) {
+    case "/upload/managegallery":
+    case "/upload/manage.php":
+    case "/upload/managefolders":
+    case "/upload/manage":
+      /* page uses old style nav bar still, so we don't encapsulate in 'div's */
+      /* we need manually inserted '>' imgs for this technique */
+      var templateImgs=[];
+      var i=0;
+      
+      /* manually insert 'my home' link */
+      templateImgs[i]=document.createElement("img"); /* re-use */
+      templateImgs[i].setAttribute("src", "https://exhentai.org/img/mr.gif");
       link[i]=document.createElement("a");
-      link[i].href=linkURLs[i];
-      link[i].innerHTML=linkNames[i];
+      link[i].href="https://e-hentai.org/home.php";
+      link[i].innerHTML=" My Home";
+      /* insert before 'manage uploads' */
+      navbar.appendChild(templateImgs[i]);
+      navbar.appendChild(link[i]);
+      i++;
+      while(i-1 < linkURLs.length )
+      {
+        templateImgs[i]=document.createElement("img"); /* re-use */
+        templateImgs[i].setAttribute("src", "https://exhentai.org/img/mr.gif");
+        link[i]=document.createElement("a");
+        link[i].href=linkURLs[i-1];
+        link[i].innerHTML=' ' + linkNames[i-1];
+        navbar.insertBefore(templateImgs[i], null);
+        navbar.insertBefore(link[i], null);
+        i++;
+      }
+      break;
+    default:
+      /* needs encapsulating in divs, new style */
+      var div=[];
+      var i=0;
+      while(i < linkURLs.length)
+      {
+        /* add "My Tagging Log" button */
+        link[i]=document.createElement("a");
+        link[i].href=linkURLs[i];
+        link[i].innerHTML=linkNames[i];
+        div[i]=document.createElement("div");
+        div[i].appendChild(link[i]);
+        navbar.insertBefore(div[i], null);
+        i++;
+      } 
+      /* i is now indexed one above the last item in link[] and div[].
+         Manually insert home in the correct spot since it's not at the end on ehg */
+      link[i]=document.createElement("a");
+      link[i].href="https://e-hentai.org/home.php";
+      link[i].innerHTML="My Home";
       div[i]=document.createElement("div");
       div[i].appendChild(link[i]);
-      navbar.insertBefore(div[i], null);
+      /* insert before 'manage uploads' */
+      navbar.insertBefore(div[i], document.querySelectorAll("a[href='https://exhentai.org/upload/manage.php']")[0].parentNode);
       i++;
+      /* manual i++ so if we do more manual insertion like this it continues making sense and can be function-ized maybe if
+         I've not been awake for 18 hours and I return to this */
     }
-    /* i is now indexed one above the last item in link[] and div[].
-       Manually insert home in the correct spot since it's not at the end on ehg */
-    link[i]=document.createElement("a");
-    link[i].href="https://e-hentai.org/home.php";
-    link[i].innerHTML="My Home";
-    div[i]=document.createElement("div");
-    div[i].appendChild(link[i]);
-    /* insert before 'manage uploads' */
-    navbar.insertBefore(div[i], document.querySelectorAll("a[href='https://exhentai.org/upload/manage.php']")[0].parentNode);
-    i++;
-    /* manual i++ so if we do more manual insertion like this it continues making sense and can be function-ized maybe if
-       I've not been awake for 18 hours and I return to this */
   }
 }
