@@ -44,7 +44,7 @@ GM_getValue=GMGetValTmp;
 /* ========================================================= */
 /* =================== END GM 4.X COMPAT =================== */
 /* ========================================================= */
-                       
+
 var i1=document.getElementById("i1");
 /* move title below image */
 var h1=document.querySelector("h1");
@@ -61,13 +61,22 @@ var s = document.createElement("style");
 
 /* Object.defineProperty(window, "currmode", {currmode : }};*/
 var currmode = { 
-    varnam: GM_getValue("viewMode", "orig"),
-    set modename(name) {
-      this.varnam=name;
-      GM_setValue("viewMode", name);
+  varnam: GM_getValue("viewMode", "orig"),
+  varZoom: GM_getValue("zoomLvl"),
+  set modename(name) {
+    this.varnam=name;
+    GM_setValue("viewMode", name);
+    if(name != "zoom")
+    {
       reapplyFit();
-    },
-    get modename() { return this.varnam}
+    }
+  },
+  get modename() { return this.varnam;},
+  get zoomLevel() { return this.varZoom;},
+  set zoomLevel(num) {
+    this.varZoom=parseInt(num);
+    GM_setValue("zoomLvl", parseInt(num));
+  }
 };
 
 s.type = "text/css";
@@ -94,15 +103,13 @@ document.head.appendChild(s);
 i1.appendChild(h1); 
 
 var img=document.getElementById("img");
+var imgContain = document.getElementById('img').parentNode.parentNode;
 var imgOrigHeight=img.style.height;
 var imgOrigWidth=img.style.width;
 
 img.style.margin="0px";
 
 /*i1.insertBefore(h1,i4);*/
-
-
-
 
 function fitHeight(store)
 {
@@ -147,8 +154,42 @@ function origSize(store)
   if(store) {currmode.modename="orig";}
 }
 
-/*function origSizeFull(store)
+function zoomSize(store)
 {
+  img=document.getElementById("img");
+  img.style.height="auto";
+  img.style.width=parseInt(currmode.zoomLevel) + '%'
+  img.style.margin= "0px";
+  if(store) { currmode.modename="zoom";}
+}
+
+function zoomBy(store, inc)
+{
+  /* first reset zoom to 100% if not already in zoom mode */
+  if(currmode.modename != "zoom") {
+    img.style.height="auto";
+    img.style.width="100%"
+    currmode.zoomLevel=100;
+  }
+  img=document.getElementById("img");
+  
+  img.style.width=(parseInt(currmode.zoomLevel) + inc ) + '%';
+  /*alert((parseInt(currmode.zoomLevel) + inc ) + '%');*/
+  img.style.margin= "0px";
+  if(parseInt(img.style.width) > 100)
+  {
+    currmode.zoomLevel=100;
+    img.style.width="100%";
+  }
+  else
+  {
+    currmode.zoomLevel=parseInt(img.style.width);
+  }
+  if(store) { currmode.modename="zoom" };
+}
+
+/*function origSizeFull(store)
+  {
   i1.style.maxHeight=null;
   i1.style.maxWidth=null;
   
@@ -158,7 +199,7 @@ function origSize(store)
   img.style.maxWidth=null;
   img.style.margin= "0px";
   if(store) {currmode.modename="origFull";}
-}*/
+  }*/
 
 function bestFit(store)
 {
@@ -180,7 +221,7 @@ function bestFit(store)
 }
 
 /*document.getElementById("prev").onclick = function(){ window.location.href=document.getElementById("prev").href; };
-document.getElementById("next").onclick = function(){ window.location.href=document.getElementById("next").href;};*/
+  document.getElementById("next").onclick = function(){ window.location.href=document.getElementById("next").href;};*/
 //if (not_reapplied){
 /* every 600 milliseconds, try to resize the image to the current setting until successful. */
 var not_reapplied=true;
@@ -202,6 +243,31 @@ document.getElementById("img").parentElement.removeAttribute("onclick");
 
 img.addEventListener('load', reapplyFit, false);
 
+/* we need to use 'keydown' for things where we want key-repeat to work.
+   we have to make sure ctrl isn't being held down, though, or we block the
+   browsers' native shortcuts. */
+window.addEventListener('keydown', function(event) {
+  /* if we aren't inputting text on the page: */
+  if(document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA" && !event.ctrlKey)
+  {
+    var key=event.which||event.keyCode;
+    switch(key){
+    case 173: /* - */
+    case 109: /* numpad - */
+      event.preventDefault();
+      window.removeEventListener("resize", bestFit, false);
+      zoomBy(true, -1); /* zoom out */
+      break;
+    case 61: /* '+' or '=' */
+    case 107: /* numpad '+' */
+      event.preventDefault();
+      window.removeEventListener("resize", bestFit, false);
+      zoomBy(true, 1); /* zoom in */
+      break;
+    }
+  }
+});
+
 window.addEventListener('keyup', function(event) {
   /* if we aren't inputting text on the page: */
   if(document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA" )
@@ -213,18 +279,17 @@ window.addEventListener('keyup', function(event) {
       window.removeEventListener("resize", bestFit, false);
       fitHeight(true);
       break;
-      
     case 87: /* 'w' */
       event.preventDefault();
       window.removeEventListener("resize", bestFit, false);
       fitWidth(true);
       break;  
-      /*case 65: // a
-        event.preventDefault();
-        window.addEventListener("resize", bestFit);
-        origSize();
-        break;*/
-    case 65:
+    case 90: /* 'z' */
+      event.preventDefault();
+      window.removeEventListener("resize", bestFit, false);
+      zoomSize(true);
+      break;
+    case 65: /* 'a' */
     case 86: /* 'v' */
       event.preventDefault();
       window.removeEventListener("resize", bestFit, false);
@@ -251,25 +316,29 @@ function reapplyFit()
 {
   var mode=currmode.modename;
   switch(mode)
-    {
-      case "fit":
-        window.removeEventListener("resize", bestFit, false);
-        bestFit(false);
-        window.addEventListener("resize", bestFit, false);
-        break;
-      case "width":
-        window.removeEventListener("resize", bestFit, false);
-        fitWidth(false);
-        break;
-      case "height":
-        window.removeEventListener("resize", bestFit, false);
-        fitHeight(false);
-        break;
-      case "orig":
-        window.removeEventListener("resize", bestFit, false);
-/*        origSize(); */ /* do nothing */
-        break;
-    }
+  {
+    case "fit":
+    window.removeEventListener("resize", bestFit, false);
+    bestFit(false);
+    window.addEventListener("resize", bestFit, false);
+    break;
+    case "width":
+    window.removeEventListener("resize", bestFit, false);
+    fitWidth(false);
+    break;
+    case "height":
+    window.removeEventListener("resize", bestFit, false);
+    fitHeight(false);
+    break;
+    case "zoom":
+    window.removeEventListener("resize", bestFit, false);
+    zoomSize(false);
+    break;
+    case "orig":
+    window.removeEventListener("resize", bestFit, false);
+    /*        origSize(); */ /* do nothing */
+    break;
+  }
 }
 
 
@@ -277,6 +346,6 @@ function reapplyFit()
 /* will require more advanced inspection of DOM */
 
 /* try to fix height before image is done loading. Inelegant solution
-to wait for image to start loading so we know the size. */
+   to wait for image to start loading so we know the size. */
 /* note: in future, check if html itself contains dimensions */
 /*window.setTimeout(reapplyFit, 800);*/
