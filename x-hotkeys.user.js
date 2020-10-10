@@ -56,6 +56,8 @@
 // @include     https://*.weasyl.com/*/submissions/*
 // @include     http://*.weasyl.com/*/submissions/*/*
 // @include     https://*.weasyl.com/*/submissions/*/*
+// @include     http://*.weasyl.com/submissions*
+// @include     https://*.weasyl.com/submissions*
 // @include     https://*.wikipedia.org/wiki/File:*
 // @include     http://derpibooru.org/images/*
 // @include     https://derpibooru.org/images/*
@@ -939,13 +941,57 @@ else if(window.location.origin.endsWith("weasyl.com"))
     return imgLink;
   }
   function openImgHere(){
-    window.location=getWeasylURL();
+    var urlnav=getWeasylURL();
+    if(urlnav) // if not null
+    {
+      window.location=urlnav;
+    }
   }
   function openImgTab(){
-    window.open(getWeasylURL());
+    var urlnav=getWeasylURL();
+    if(urlnav)
+    {
+      window.open(urlnav);
+    }
+  }
+  /* weasyl already handles next/previous on its own */
+  /* ...except on user submission category folder pages, I guess? */
+  if(/folderid=/i.test(window.location.href) )
+  {
+    function prevImg()
+    {
+      var pagenavbuttons=document.querySelectorAll("a.button");
+      var i=0;
+      while(i < pagenavbuttons.length)
+      {
+        // if pagenavbuttons has href attribute and that contains 'backid',
+        // it's a back button.
+        if(pagenavbuttons[i].href && /backid=/i.test(pagenavbuttons[i].href))
+        {
+          window.location=pagenavbuttons[i].href;
+          i=pagenavbuttons.length;
+        }
+        i++;
+      }
+    }
+    function nextImg()
+    {
+      var pagenavbuttons=document.querySelectorAll("a.button");
+      var i=0;
+      while(i < pagenavbuttons.length)
+      {
+        // if pagenavbuttons has href attribute and that contains 'backid',
+        // it's a back button.
+        if(pagenavbuttons[i].href && /nextid=/i.test(pagenavbuttons[i].href))
+        {
+          window.location=pagenavbuttons[i].href;
+          i=pagenavbuttons.length;
+        }
+        i++;
+      }
+    }
   }
 }
-/* weasyl already handles next/previous on its own*/
 /* ======================END WEASYL DEFINES====================== */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
