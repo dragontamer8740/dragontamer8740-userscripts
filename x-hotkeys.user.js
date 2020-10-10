@@ -28,6 +28,8 @@
 // @include     https://hentai-foundry.com/pictures/user/*/*/*
 // @include     http://*.furaffinity.net/view/*
 // @include     https://*.furaffinity.net/view/*
+// @include     http://*.furaffinity.net/full/*
+// @include     https://*.furaffinity.net/full/*
 // @include     http://*.furaffinity.net/gallery/*/
 // @include     https://*.furaffinity.net/gallery/*/
 // @include     http://*.furaffinity.net/search/*
@@ -697,7 +699,8 @@ else if(window.location.origin.endsWith("furaffinity.net"))
   
   /* nextImg and prevImg are swapped on FA to align with the directions of the
      nav buttons. So next will go to the previous image */
-  if(window.location.href.replace(/^htt.*\:\/\/www\.furaffinity.net/,'').startsWith('/view'))
+  var urltmp=window.location.href.replace(/^htt.*\:\/\/www\.furaffinity.net/,'')
+  if(urltmp.startsWith('/view') || urltmp.startsWith('/full'))
   {
     function prevImg()
     {
@@ -708,23 +711,32 @@ else if(window.location.origin.endsWith("furaffinity.net"))
       window.location=document.querySelector(".prev").href;
     }
   }
-  else if(window.location.href.replace(/^htt.*\:\/\/www\.furaffinity\.net/,'').startsWith('/search'))
+  else if(urltmp.startsWith('/search'))
   {
-    // FA uses stupid HTTP POSTs to navigate through search results.
-    // And only provides a 'more results' button, not anything to go back.
+    /* FA uses stupid HTTP POSTs to navigate through search results. */
+    /* get fields */
+    
+    /*var form=document.querySelector('form#search-form[action="/search/"]').cloneNode(true).innerHTML;*/
+
+    
+    //document.querySelector('form#search-form[action="/search/"] > fieldset > input#q').parentElement.innerHTML=fieldset;
+    
     // stash values on page load time for later backward navigation.
     var postField=document.querySelector('form#search-form[action="/search/"] > fieldset > input#q').parentElement;
     var pageNum=parseInt(postField.querySelector("input#page").getAttribute('value'));
-    // make a backup of the entire contents of the search form for restoring
-    // when moving back a page.
-    // not sure if the clone is actually needed here though.
+    /*
+     * make a backup of the entire contents of the search form for restoring
+     * when moving back a page. Not sure if the clone is actually needed here
+     * though.
+     */
     var fieldset=postField.cloneNode(true).innerHTML;
     
     function prevImg()
     {
-      // decrement page field by 1  and click 'search' button.
-      // First, restore the values from page load time first in case user
-      // tweaks them and then wants to go back without applying changes.
+      /* decrement page field by 1  and click 'search' button.*/
+      
+      /* First, restore the values from page load time first in case user
+         tweaks and then wants to go back without applying changes.*/
       postField.innerHTML=fieldset;
       // decrement by one.
       postField.querySelector("input#page").setAttribute('value',String(pageNum-1));
@@ -734,7 +746,7 @@ else if(window.location.origin.endsWith("furaffinity.net"))
     function nextImg()
     {
       // the page gives us a 'next' button, but not a 'previous' button -_-
-      // so this is much easier.
+      // so this is easier.
       document.querySelector("input.button[name='next_page']").click();
     }
   }
@@ -742,15 +754,22 @@ else if(window.location.origin.endsWith("furaffinity.net"))
   {
     function prevImg()
     {
-      window.location=document.querySelector(".button-link.left");
+      if(document.querySelector(".button-link.left").href)
+      {
+        window.location=document.querySelector(".button-link.left");
+      }
     }
     function nextImg()
     {
-      window.location=document.querySelector(".button-link.right");
+      if(document.querySelector(".button-link.right").href)
+      {
+        window.location=document.querySelector(".button-link.right");
+      }
     }
   }
   
 }
+
 /* ====================END FA DEFINES==================== */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -788,6 +807,7 @@ else if(window.location.origin.endsWith("gelbooru.com"))
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* ====================BEGIN SANKAKUCOMPLEX DEFINES==================== */
+
 else if(window.location.origin.endsWith("chan.sankakucomplex.com"))
 {
   function getSKURL(){
@@ -801,6 +821,7 @@ else if(window.location.origin.endsWith("chan.sankakucomplex.com"))
     window.open(getSKURL());
   }  
 }
+
 /* ====================END SANKAKUCOMPLEX DEFINES==================== */
 
 
@@ -811,7 +832,6 @@ else if(window.location.origin.endsWith("chan.sankakucomplex.com"))
 
 else if(window.location.origin.endsWith("newgrounds.com"))
 {
-  
   /* bypass "adult content" warnings on flash files," since the account 
      setting seems broken */
   /* only tested with flash player installed. Might not work for video
@@ -829,7 +849,7 @@ else if(window.location.origin.endsWith("newgrounds.com"))
       catch(e){console.log("couldn't run 'checkPreroll()' from the source page. Probably a sandboxing problem I failed to account for.")}
     }
   }
-
+  
   function getNGURL()
   {
     if(document.querySelector(".pod-body #embed_wrapper"))
@@ -896,6 +916,9 @@ else if(window.location.origin.endsWith("rule34.paheal.net"))
   
 }
 /* ====================END R34.PAHEAL DEFINES==================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* =====================BEGIN WEASYL DEFINES===================== */
 else if(window.location.origin.endsWith("weasyl.com"))
 {
@@ -924,9 +947,8 @@ else if(window.location.origin.endsWith("weasyl.com"))
 }
 /* weasyl already handles next/previous on its own*/
 /* ======================END WEASYL DEFINES====================== */
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 /* ====================BEGIN WIKIPEDIA DEFINES==================== */
 else if(window.location.origin.endsWith(".wikipedia.org"))
@@ -994,8 +1016,7 @@ window.addEventListener('keyup', function(event) {
   }
 });
 
-
-// export for other scripts to hook
+// export for other scripts to be able to hook
 try{
   unsafeWindow.openImgHere=openImgHere;
   unsafeWindow.openImgTab=openImgTab;
@@ -1003,4 +1024,5 @@ try{
   unsafeWindow.nextImg=nextImg;
 }
 catch(e){}
-// do not report an error if not using GM 4
+// do not report an error if not using GreaseMonkey 4.
+// (GM 3.x, Violentmonkey, and maybe Tampermonkey don't need unsafeWindow)
