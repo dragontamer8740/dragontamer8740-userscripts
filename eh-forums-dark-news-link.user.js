@@ -15,13 +15,12 @@ if(calendarBtnImg) // this will be null if using the "ambience" theme; do nothin
   calendarBtnImg.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAmCAMAAABwIXKiAAAANlBMVEUgISY0Nz8zNj4yNDwwMjovMTkuMDguMDctLzaZmZ4xMzssLjUpKzEPDxIODhEcHSE+QUs0NTtxQvx3AAAAf0lEQVR4Ae2TBRLDMBADzzj9/2uTmG/LHSqzWcoqbC/nFW9u4v6cvIhrl3BOinaHVRwND314XYfC2xXiJ9fVaGPMoita9uhDLgUOpU2a1lQGj+ejkI/am4QhzFjSh1YJ4eczn7e++Xc7979ancmlM7l47/1xHujtl+zL+t7P0QG6tyXAowh3UQAAAABJRU5ErkJggg==';
   // old image was 68px; new image is only 39px (half as wide), so we have to fix the layout for it.
   calendarBtnImg.setAttribute("width", "39");
-  if(calendarBtnImg.parentNode)
+  if(calendarBtnImg.parentNode) // the hyperlink node ('<a href=...>')
   {
-    var calendarBtnLink = calendarBtnImg.parentNode;
-    calendarBtnLink.href='https://e-hentai.org/news.php';
-    if(calendarBtnLink.parentNode)
+    calendarBtnImg.parentNode.href='https://e-hentai.org/news.php';
+    if(calendarBtnImg.parentNode.parentNode) // the 'td' table data node
     {
-      calendarBtnLink.parentNode.setAttribute("width", "39");
+      calendarBtnImg.parentNode.parentNode.setAttribute("width", "39");
     }
   }
 }
