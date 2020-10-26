@@ -23,6 +23,10 @@
 // @include     https://*.furaffinity.net/view/*/
 // @include     http://*.furaffinity.net/gallery/*/
 // @include     https://*.furaffinity.net/gallery/*/
+// @include     http://*.weasyl.com/*/submissions/*
+// @include     https://*.weasyl.com/*/submissions/*
+// @include     http://*.weasyl.com/*/submissions/*/*
+// @include     https://*.weasyl.com/*/submissions/*/*
 
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -59,6 +63,10 @@ else if (urlwoprot.startsWith("chan.sankakucomplex.com"))
 else if (urlwoprot.startsWith("www.furaffinity.net/view/"))
 {
   setTimeout(doFocusCheckOpen, 1500);
+}
+else if(window.location.origin.endsWith("weasyl.com"))
+{
+  setTimeout(doFocusCheckOpen, 3000);
 }
 
 if(document.title=="503 Backend fetch failed")
