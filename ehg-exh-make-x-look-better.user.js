@@ -16,6 +16,8 @@
 /*var thumbHi = "200px";
   var thumbWd = "282px";*/
 /* if not hentaiverse */
+var REPLACE_WITH_X_CSS = true;
+
 if(! window.location.origin.endsWith("hentaiverse.org"))
 {
   var thumbHi = "300px";
@@ -26,14 +28,17 @@ if(! window.location.origin.endsWith("hentaiverse.org"))
   /* find link to g.css and replace */
   var links=document.head.querySelectorAll("link");
   var i=0;
-  while(i < links.length)
+  if ( REPLACE_WITH_X_CSS == true )
   {
-    if(links[i].getAttribute("rel") === "stylesheet")
+    while(i < links.length)
     {
-      links[i].setAttribute("href",links[i].getAttribute("href").replace('e-hentai','exhentai').replace('g.css','x.css'));
-      i=links.length;
+      if(links[i].getAttribute("rel") === "stylesheet")
+      {
+        links[i].setAttribute("href",links[i].getAttribute("href").replace('e-hentai','exhentai').replace('g.css','x.css'));
+        i=links.length;
+      }
+      i++;
     }
-    i++;
   }
 
   var heading=document.querySelector("h1");
@@ -74,6 +79,15 @@ h1 {
   var s = document.createElement("style");
   s.type = "text/css";
   s.innerText = `/* style ehg like X */
+                 input:not([type="checkbox"]),select,option,optgroup,textarea,input[type="button"],input[type="submit"]
+                 {
+                   font-size: 8pt !important;
+                   border: initial !important;
+                   border-radius: initial !important;
+                   background-color: #34353b !important;
+                   -moz-appearance: none !important;
+               }
+
                body {
                      background: #34353b none repeat scroll 0 0 !important;
                      color: #f1f1f1;
@@ -93,6 +107,11 @@ h1 {
                div.ido {
                      border: 1px solid #f1f1f1 !important;
                      background: #4f535b none repeat scroll 0 0 !important;
+               }
+/* archiver */
+               div#db {
+                     background: #4F535B  none repeat scroll 0 0 !important;
+                     border: 1px solid #f1f1f1 !important;
                }
 /* home.php */
                div.homebox {
@@ -199,6 +218,92 @@ h1 {
                      background-color: #34353b !important;
                      color: #f1f1f1 !important;
                }
+
+  /* ONLY FOR WHEN EXH IS UTTERLY DEAD: */
+/*               a, a.glink, a:visited, a:visited .glink, a:active, a:active .glink
+               {
+                     color: #dddddd !important;
+               }
+               a:hover, a:hover .glink
+               {
+                     color: #ffffff !important;
+               }
+               input[type="button"]:enabled:hover,input[type="submit"]:enabled:hover,input[type="button"]:enabled:focus,input[type="submit"]:enabled:focus
+               {
+                     background-color: #3E424A !important;
+                     border-color:#977273 !important;
+                     outline:0;
+               }
+               div#gd4
+               {
+                     border-left: 1px solid #606060 !important;
+                     border-right: 1px solid #606060 !important;
+               }
+               table.ptb td.ptds, table.ptt td.ptds
+               {
+                     border-color: #606060 !important;
+                     background-color: rgb(67,70,78) !important;
+               }
+               table.ptb td, table.ptt td
+               {
+                     border-color: #606060 !important;
+                     background-color: #363940 !important;
+               }
+               table.ptt a
+               {
+                     color: #ffffff !important;
+               }
+               div.gm, div#gmid, div#gd2, div.ths, div#tagpopup, div.sni
+               {
+                     background-color: #4F535B !important;
+                     border-color: #606060 !important;
+               }
+               div#gdt img
+               {
+                     border-color: #606060 !important;
+               }
+               div#gdt
+               {
+                     border-color: #606060 !important;
+                     background-color: #34353B !important;
+               }
+               h1#gj
+               {
+                     border-bottom: 1px solid #606060 !important;
+               }
+               div.tha, div.thd
+               {
+                     border-color: #606060 !important;
+                     color: #f1f1f1 !important;
+               }
+               div.tha:hover
+               {
+                     background-color: #222222 !important;
+               }
+               div.thd
+               {
+                     color: #b1b1b1 !important;
+               }
+               div.c2
+               {
+                     background-color: #363940 !important;
+                     border-color: #606060 !important;
+               }
+               div.gt, div.gtl, div.gtw
+               {
+                     background-color: #595D66 !important;
+                     border-color: #606060 !important;
+               }
+               div.gt a:hover, div.gtl a:hover, div.gtw a:hover
+               {
+                     background-color: #595D66 !important;
+                     border-color: #606060 !important;
+                     color: #ffffff !important;
+               }
+               div.gdtl:hover, div#gdt a:hover
+               {
+                     color: #f1f1f1 !important;
+               }*/
 `;
 
   document.head.appendChild(s);
@@ -265,6 +370,40 @@ border-top:0;
   /*=document.querySelector("div#x");
   bountyField;*/
 }
+else if (/bitcoin.php/.test(window.location.href))
+{
+  var s=document.createElement("style");
+  s.type="text/css";
+  s.innerText=` /* bitcoin.php rules */
+tr#dlvl {
+background-color: #545860;
+border: 1px solid gray;
+}
+#tdon th{
+  border-bottom: 1px solid gray;
+}
+#adon > div:nth-child(3) {
+  border-left: 1px solid gray;
+}
+#adon {
+  border-top: 1px solid gray;
+}
+#coinselector > div:not([onclick]) {
+  border: 1px solid gray;
+}
+#coinselector > div[onclick] {
+  border-bottom: 1px solid gray;
+  background-color: #34353B;
+}
+#coinselector>div[onclick]:hover {
+  background-color: #545860
+}
+#coinselector>div[onclick]:hover a {
+  color: #f0f0f0;
+}
+`;
+  document.head.appendChild(s);
+}
 else if(/bounty_post.php/.test(window.location.href))
 {
          var s=document.createElement("style");
@@ -326,9 +465,54 @@ else if(/home.php$/.test(window.location.href))
     }
     i++;
   }
-  /*
-               html body div.stuffbox div.homebox table tbody tr td
-      {
-                 border-right: 1px solid #f1f1f1 !important;
-      }*/
+
+  /* doesn't really belong in this script, but here it is anyway.
+   * A precise sum of moderation power scores. */
+  var modsum = document.createElement("div");
+  modsum.style.marginTop="5px";
+  modsum.style.fontSize="10pt";
+  modsum.style.fontWeight="bold";
+  modsum.id='summod';
+  var rightsum=0;
+  var leftsum=0;
+  var trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td table tbody tr');
+  i=0;
+  while(i<trs.length)
+  {
+    if(trs[i].innerHTML.includes("(capped to"))
+    {
+      rightsum=trs[i].querySelector('td[style*="font-weight"]');
+      rightsum=parseFloat(rightsum.innerHTML.replace(/[^0-9\.]+/g,""));
+    }
+    else if(trs[i].innerHTML.includes("Tagging"))
+    {
+      /* this is horrible. */
+      /* one tr past here is what we want */
+        leftsum=trs[i+1].querySelector('td[style*="font-weight"]');
+        if(leftsum)
+        {
+          leftsum=leftsum.innerHTML;
+        }
+    }
+    i++;
+  }
+  /* there are multiple matches for leftsum, we just want the last one of them. Hacky. */
+  leftsum=parseFloat(leftsum.replace(/[^0-9\.]+/g,""));
+  trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td');
+  i=0;
+  while(i<trs.length)
+  {
+    if(trs[i].innerHTML.includes("Current Moderation Power"))
+    {
+      appendTargetSum=trs[i];
+      appendTargetSum.insertBefore(modsum,null);
+      // document.getElementById("summod").textContent='(' + (rightsum + leftsum) + ')';
+      // We need to round or we'll get weird floating point artifacts sometimes
+      // (like with 16.97 + 1.45)
+      var sum=Math.round((rightsum + leftsum) * Math.pow(10, 2)) / Math.pow(10, 2);
+      document.getElementById("summod").textContent='(' + (sum) + ')';
+    }
+    i++;
+  }
+  i=0;
 }
