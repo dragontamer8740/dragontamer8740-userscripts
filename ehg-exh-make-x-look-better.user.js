@@ -17,6 +17,7 @@
   var thumbWd = "282px";*/
 /* if not hentaiverse */
 var REPLACE_WITH_X_CSS = true;
+var SHOW_PRECISE_CURRENT_MOD_POWER = true;
 
 if(! window.location.origin.endsWith("hentaiverse.org"))
 {
@@ -454,65 +455,68 @@ else if(/stats.php/.test(window.location.href))
 }
 else if(/home.php$/.test(window.location.href))
 {
-  var tds=document.querySelectorAll("td");
-  var i=0;
-  while(i<tds.length)
+  if(SHOW_PRECISE_CURRENT_MOD_POWER == true)
   {
-    if(tds[i].innerHTML.includes("Current Moderation Power"))
+    var tds=document.querySelectorAll("td");
+    var i=0;
+    while(i<tds.length)
     {
-      tds[i].style["border-right"]="1px solid gray";
-      i=tds.length;
+      if(tds[i].innerHTML.includes("Current Moderation Power"))
+      {
+        tds[i].style["border-right"]="1px solid gray";
+        i=tds.length;
+      }
+      i++;
     }
-    i++;
-  }
-
-  /* doesn't really belong in this script, but here it is anyway.
-   * A precise sum of moderation power scores. */
-  var modsum = document.createElement("div");
-  modsum.style.marginTop="5px";
-  modsum.style.fontSize="10pt";
-  modsum.style.fontWeight="bold";
-  modsum.id='summod';
-  var rightsum=0;
-  var leftsum=0;
-  var trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td table tbody tr');
-  i=0;
-  while(i<trs.length)
-  {
-    if(trs[i].innerHTML.includes("(capped to"))
+    
+    /* doesn't really belong in this script, but here it is anyway.
+     * A precise sum of moderation power scores. */
+    var modsum = document.createElement("div");
+    modsum.style.marginTop="5px";
+    modsum.style.fontSize="10pt";
+    modsum.style.fontWeight="bold";
+    modsum.id='summod';
+    var rightsum=0;
+    var leftsum=0;
+    var trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td table tbody tr');
+    i=0;
+    while(i<trs.length)
     {
-      rightsum=trs[i].querySelector('td[style*="font-weight"]');
-      rightsum=parseFloat(rightsum.innerHTML.replace(/[^0-9\.]+/g,""));
-    }
-    else if(trs[i].innerHTML.includes("Tagging"))
-    {
-      /* this is horrible. */
-      /* one tr past here is what we want */
+      if(trs[i].innerHTML.includes("(capped to"))
+      {
+        rightsum=trs[i].querySelector('td[style*="font-weight"]');
+        rightsum=parseFloat(rightsum.innerHTML.replace(/[^0-9\.]+/g,""));
+      }
+      else if(trs[i].innerHTML.includes("Tagging"))
+      {
+        /* this is horrible. */
+        /* one tr past here is what we want */
         leftsum=trs[i+1].querySelector('td[style*="font-weight"]');
         if(leftsum)
         {
           leftsum=leftsum.innerHTML;
         }
+      }
+      i++;
     }
-    i++;
-  }
-  /* there are multiple matches for leftsum, we just want the last one of them. Hacky. */
-  leftsum=parseFloat(leftsum.replace(/[^0-9\.]+/g,""));
-  trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td');
-  i=0;
-  while(i<trs.length)
-  {
-    if(trs[i].innerHTML.includes("Current Moderation Power"))
+    /* there are multiple matches for leftsum, we just want the last one of them. Hacky. */
+    leftsum=parseFloat(leftsum.replace(/[^0-9\.]+/g,""));
+    trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td');
+    i=0;
+    while(i<trs.length)
     {
-      appendTargetSum=trs[i];
-      appendTargetSum.insertBefore(modsum,null);
-      // document.getElementById("summod").textContent='(' + (rightsum + leftsum) + ')';
-      // We need to round or we'll get weird floating point artifacts sometimes
-      // (like with 16.97 + 1.45)
-      var sum=Math.round((rightsum + leftsum) * Math.pow(10, 2)) / Math.pow(10, 2);
-      document.getElementById("summod").textContent='(' + (sum) + ')';
+      if(trs[i].innerHTML.includes("Current Moderation Power"))
+      {
+        appendTargetSum=trs[i];
+        appendTargetSum.insertBefore(modsum,null);
+        // document.getElementById("summod").textContent='(' + (rightsum + leftsum) + ')';
+        // We need to round or we'll get weird floating point artifacts sometimes
+        // (like with 16.97 + 1.45)
+        var sum=Math.round((rightsum + leftsum) * Math.pow(10, 2)) / Math.pow(10, 2);
+        document.getElementById("summod").textContent='(' + (sum) + ')';
+      }
+      i++;
     }
-    i++;
+    i=0;
   }
-  i=0;
 }
