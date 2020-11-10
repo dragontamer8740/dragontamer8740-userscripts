@@ -311,7 +311,7 @@ h1 {
   
 }
 /* second karma rule is for karma.php, for imbuing karma from forums.*/
-if(/karma$/.test(window.location.href) || /credits$/.test(window.location.href) || /karma\.php/.test(window.location.href))
+if(/karma$/.test(window.location.href) || /credits$/.test(window.location.href) || /karma\.php/.test(window.location.href) || /logs.php\?t=karma/.test(window.location.href))
 {
   var i=0;
   var divs=document.querySelectorAll("div");
@@ -402,7 +402,7 @@ border: 1px solid gray;
   color: #f0f0f0;
 }
 `;
-  document.head.appendChild(s);
+  document.head.appendChild(s);     
 }
 else if(/bounty_post.php/.test(window.location.href))
 {
@@ -465,7 +465,7 @@ else if(/home.php$/.test(window.location.href))
     }
     i++;
   }
-
+  
   /* doesn't really belong in this script, but here it is anyway.
    * A precise sum of moderation power scores. */
   var modsum = document.createElement("div");
@@ -496,7 +496,7 @@ else if(/home.php$/.test(window.location.href))
     }
     i++;
   }
-  /* there are multiple matches for leftsum, we just want the last one of them. Hacky. */
+  /* there are multiple matches for leftsum, we just want the last one of them */
   leftsum=parseFloat(leftsum.replace(/[^0-9\.]+/g,""));
   trs=document.querySelectorAll('html body div.stuffbox div.homebox table tbody tr td');
   i=0;
@@ -514,5 +514,12 @@ else if(/home.php$/.test(window.location.href))
     }
     i++;
   }
+  
   i=0;
+  
+  /*
+               html body div.stuffbox div.homebox table tbody tr td
+      {
+                 border-right: 1px solid #f1f1f1 !important;
+      }*/
 }
