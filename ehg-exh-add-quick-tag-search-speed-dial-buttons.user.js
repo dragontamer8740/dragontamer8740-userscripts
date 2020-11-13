@@ -66,7 +66,7 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
   var newTd=document.createElement("td"); // table cell for buttons to go into
 
   // add all of the buttons you want here; just make sure they all use different function names (second-to-last argument).
-  // syntax:
+  // syntax (Note that insertion point can always be 'newtd,' I think):
   //               'Button label', 'Tag to insert',    'Unique Function Name', 'Insertion point'
   addCusttomButton('English',      'l:english',        'tagAddEnglish',         newTd);
 }
