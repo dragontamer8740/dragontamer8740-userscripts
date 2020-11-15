@@ -31,7 +31,7 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
     toggle_advsearch_pane(document.getElementById("showAdvSearchLink"));
   }
 
-  function addCusttomButton(buttonLabel, tagValue, tagFuncName, afterElement)
+  function addCustomButton(buttonLabel, tagValue, tagFuncName, afterElement)
   {
     var advSearchElements=document.querySelectorAll(".itss")[0].children[0];
     var additionalButtonScript=document.createElement("script");
@@ -68,5 +68,5 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
   // add all of the buttons you want here; just make sure they all use different function names (second-to-last argument).
   // syntax (Note that insertion point can always be 'newtd,' I think):
   //               'Button label', 'Tag to insert',    'Unique Function Name', 'Insertion point'
-  addCusttomButton('English',      'l:english',        'tagAddEnglish',         newTd);
+  addCustomButton('English',      'l:english',        'tagAddEnglish',         newTd);
 }
