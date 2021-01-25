@@ -61,11 +61,22 @@
 // @include     https://*.wikipedia.org/wiki/File:*
 // @include     http://derpibooru.org/images/*
 // @include     https://derpibooru.org/images/*
+// @include     http://derpibooru.org/search*
+// @include     https://derpibooru.org/search*
+// @include     /http://derpibooru.org/[0-9]*$/
+// @include     /https://derpibooru.org/[0-9]*$/
+// @include     http://*.booru.org/index.php*
+// @include     https://*.booru.org/index.php*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
 
 //unsafeWindow needed to access these functions from another script
+
+// a setting, since some people might not like going fullscreen on an 'f' key press.
+var ALLOW_FULLSCREEN = true;
+
+var SITE_CAN_FULLSCREEN = false; // overridden per-site
 
 /* to override later */
 function openImgTab(){
@@ -79,6 +90,24 @@ function nextImg(){
 }
 function prevImg(){
   return;
+}
+
+// fullscreen function is the same everywhere unless I decide otherwise.
+function toggleFullscreen()
+{
+  // check if global pref is enabled, as well as per-site pref. Right now, this is an opt-in basis.
+  if(ALLOW_FULLSCREEN == true && SITE_CAN_FULLSCREEN == true)
+  if (!document.fullscreenElement)
+  {
+    document.querySelector('html').requestFullscreen();
+  }
+  else
+  {
+    if (document.exitFullscreen)
+    {
+      document.exitFullscreen(); 
+    }
+  }
 }
 
 /*
@@ -207,6 +236,11 @@ if(window.location.origin.endsWith("inkbunny.net"))
       }
       i++;
     }
+    if(!nextPgLink)
+    {
+      /* not a multi-part thing, so go to next newest submission */
+      nextPgLink=document.querySelectorAll("a[title='Newer']")[0];
+    }
     if(nextPgLink)
     {
       window.location=nextPgLink;
@@ -226,6 +260,10 @@ if(window.location.origin.endsWith("inkbunny.net"))
         i=candidates.length; /* stop iterating */
       }
       i++;
+    }
+    if(!prevPgLink)
+    {
+      prevPgLink=document.querySelectorAll("a[title='Older']")[0];
     }
     if(prevPgLink)
     {
@@ -285,39 +323,10 @@ if(window.location.origin.endsWith("inkbunny.net"))
 
 /* ====================BEGIN EHG DEFINES==================== */
 else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.location.origin.endsWith("e-hentai.org")))
-{
-  /* Right click as shortcut for tag upvote */
-  // Right click as shortcut for upvote
+{  
+  // allow fullscreen func on ehg
+  SITE_CAN_FULLSCREEN = true;
   
-  
-  
-  /*var i=0;
-    var tags=document.querySelectorAll('.gt, .gtl, .gtw');
-    while(i<tags.length){
-    var tagid=tags[i].id.toString();
-    var tag=tags[i];
-    tags[i].oncontextmenu = function (arg)
-    {
-    return function(){
-    //arg.click();
-    var onclickfn=arg.children[0].getAttribute('onclick');
-    // trim return
-    onclickfn=onclickfn.substr(onclickfn.indexOf(" ") + 1);
-    // highlight element
-    unsafeWindow.eval(onclickfn);
-    // do the upvote
-    unsafeWindow.tag_vote_up();
-    return false; // prevent normal context menu
-    }
-    }(tag)
-    i++;
-    }*/
-
-  
-  /* nextImg() and prevImg() have functionality the site already covers. But for the gallery
-     thumbnails view we can page left and right using the same nav keys so we have to handle
-     that for gallery pages specifically. */
-
   function nextImg()
   {
     var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
@@ -864,7 +873,19 @@ else if(window.location.origin.endsWith("newgrounds.com"))
     else
     {
       /* this is not a flash page */
-      return document.querySelector(".pod-body .image > a#portal_item_view").href;
+      var imgurlobj=document.querySelector(".pod-body .image > a#portal_item_view");
+      if(imgurlobj)
+      {
+        return imgurlobj.href;
+      }
+      else /* gif's sometimes do this */
+      {
+        imgurlobj=document.querySelector(".pod-body .image > img");
+        if(imgurlobj)
+        {
+          return imgurlobj.src;
+        }
+      }
     }
   }
   function openImgHere(){
@@ -1018,22 +1039,131 @@ else if(window.location.origin.endsWith(".wikipedia.org"))
 
 if(window.location.origin.endsWith("derpibooru.org"))
 {
-  function getDerpibooruURL()
+  /* block "go to index" hotkey from interfering (or try to anyway).
+     it uses a keydown instead of my preferred keyup.
+     thankfully, due to this, I can block the page's listener without
+     interfering with my own (which works on keyup instead). */
+  function listenBlock(obj, eventType, keycode)
   {
-    // this one is ugly and I don't trust it.
-    var links=document.querySelectorAll("div.stretched-mobile-links > a > .fa-download");
-    return links[links.length-1].parentElement.href;
+    obj.addEventListener(eventType, function(event) {
+      var key=event.which||event.keyCode;
+      if(key==keycode)
+      {
+        event.stopPropagation();
+        /* event.preventDefault(); */
+      }
+    }, true); /* true for event capture */
   }
-  function openImgHere()
+  // listenBlock(window, 'keydown', 73);
+  listenBlock(document, 'keydown', 73); /* 73 == 'i' */
+  function nextImg() /* next page of results or next image */
   {
-    window.location=getDerpibooruURL();
+    var nextbtn=document.querySelectorAll('a.js-next')[0];
+    if(nextbtn)
+    {
+      window.location=nextbtn.href;
+    }
   }
-  function openImgTab()
+  function prevImg()
   {
-    window.open(getDerpibooruURL());
+    var prevbtn=document.querySelectorAll('a.js-prev')[0];
+    if(prevbtn)
+    {
+      window.location=prevbtn.href;
+    }
+  }
+  if(/\/images\//i.test(window.location.href) || /\/[0-9]*$/i.test(window.location.href) ) /* url contains /images/ */
+  {
+    function getDerpibooruURL()
+    {
+      // this one is ugly and I don't trust it.
+      var links=document.querySelectorAll("div.stretched-mobile-links > a > .fa-download");
+      return links[links.length-1].parentElement.href;
+    }
+    function openImgHere()
+    {
+      window.location=getDerpibooruURL();
+    }
+    function openImgTab()
+    {
+      window.open(getDerpibooruURL());
+    }
   }
 }
 /* ====================END DERPIBOORU DEFINES==================== */
+
+/* ====================BEGIN BOORU.ORG DEFINES==================== */
+if(window.location.origin.endsWith(".booru.org"))
+{
+  function getBooruOrgURL()
+  {
+    imgobj=document.querySelector("img[alt='img']");
+    if(imgobj != null)
+    {
+      return imgobj.src;
+    }
+    return null;
+  }
+  function openImgHere(){
+    var imgurl=getBooruOrgURL();
+    if(imgurl != null)
+    {
+      window.location=imgurl;
+    }
+  }
+  function openImgTab(){
+    var imgurl=getBooruOrgURL();
+    if(imgurl != null)
+    {
+      window.open(imgurl);
+    }
+  }
+  function nextImg(){
+    var nextbtn=document.querySelector("a[alt='next']");
+    if(nextbtn)
+    {
+      window.location=nextbtn.href;
+    }
+    else {
+      var candidates=document.querySelectorAll('a');
+      var i=0;
+      var link=null;
+      while(i<candidates.length){
+        if(candidates[i].innerHTML.toLowerCase().includes('next')){
+          link=candidates[i].href;
+          i=candidates.length;
+        }
+        i++;
+      }
+      if(link != null){
+        window.location=link;
+      }
+    }
+  }
+  function prevImg(){
+    var prevbtn=document.querySelector("a[alt='back']");
+    if(prevbtn)
+    {
+      window.location=prevbtn.href;
+    }
+    else {
+      var candidates=document.querySelectorAll('a');
+      var i=0;
+      var link=null;
+      while(i<candidates.length){
+        if(candidates[i].innerHTML.toLowerCase().includes('previous')){
+          link=candidates[i].href;
+          i=candidates.length;
+        }
+        i++;
+      }
+      if(link != null){
+        window.location=link;
+      }
+    }
+  }
+}
+/* ====================END BOORU.ORG DEFINES==================== */
 
 
 /* register hotkeys */
