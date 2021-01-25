@@ -97,15 +97,17 @@ function toggleFullscreen()
 {
   // check if global pref is enabled, as well as per-site pref. Right now, this is an opt-in basis.
   if(ALLOW_FULLSCREEN == true && SITE_CAN_FULLSCREEN == true)
-  if (!document.fullscreenElement)
   {
-    document.querySelector('html').requestFullscreen();
-  }
-  else
-  {
-    if (document.exitFullscreen)
+    if (!document.fullscreenElement)
     {
-      document.exitFullscreen(); 
+      document.querySelector('html').requestFullscreen();
+    }
+    else
+    {
+      if (document.exitFullscreen)
+      {
+        document.exitFullscreen(); 
+      }
     }
   }
 }
@@ -325,7 +327,7 @@ if(window.location.origin.endsWith("inkbunny.net"))
 else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.location.origin.endsWith("e-hentai.org")))
 {  
   // allow fullscreen func on ehg
-  SITE_CAN_FULLSCREEN = true;
+  SITE_CAN_FULLSCREEN = false;
   
   function nextImg()
   {
