@@ -132,6 +132,9 @@ textarea {
   background: #1a1a1a;
   border: 1px solid #464646;
 }
+.pagination a:hover {
+  background: #525252;
+}
 .pagination .pagination_current {
   background: none;
   color: #878787;
