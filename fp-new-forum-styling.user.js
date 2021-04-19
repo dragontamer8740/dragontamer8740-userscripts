@@ -149,5 +149,50 @@ textarea {
 .post .post_head span.edited_post a{
   color: #d5d5d5;
 }
+.codeblock {
+  background: #222222;
+  border: 1px solid #343434;
+}
+.codeblock .title {
+  border-bottom: 1px solid #464646;
+}
+.sceditor-container iframe, .sceditor-container textarea {
+  background: #0d0d0d !important;
+  color: #c6c6c6 !important;
+}
+.sceditor-container, .sceditor-container div, div.sceditor-dropdown, div.sceditor-dropdown div {
+  background: padding-box #404040;
+}
+.sceditor-container {
+  border: 1px solid #343434 !important;
+  background: #202020 !important;
+  color: #c6c6c6;
+}
+div.sceditor-toolbar {
+  background: #202020 !important;
+  border-bottom: #343434;
+}
+div.sceditor-group
+{
+  background: #404040 !important;
+}
+.sceditor-button {
+  border: 1px solid #343434 !important;
+  border-bottom: #343434;
+}
+.sceditor-button:hover, .sceditor-button:active, .sceditor-button.active {
+  background: #0d0d0d !important;
+  border-bottom: #343434;
+}
+body[contenteditable="true"] {
+  color: #c6c6c6;
+}
+/* PM header (select who to send message to) */
+.select2-container-multi .select2-choices
+{
+  background-color: #202020 !important;
+  background-image: none !important;
+  border: 1px solid #343434 !important;
+}
 `;
 document.head.appendChild(s);
