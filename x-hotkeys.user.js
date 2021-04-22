@@ -67,6 +67,8 @@
 // @include     /https://derpibooru.org/[0-9]*$/
 // @include     http://*.booru.org/index.php*
 // @include     https://*.booru.org/index.php*
+// @include     http://*.patreon.com/*
+// @include     https://*.patreon.com/*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -1167,6 +1169,45 @@ if(window.location.origin.endsWith(".booru.org"))
 }
 /* ====================END BOORU.ORG DEFINES==================== */
 
+/* ====================BEGIN PATREON DEFINES==================== */
+
+if(window.location.origin.endsWith("patreon.com"))
+{
+  function getPatreonURL()
+  {
+    var lightboxImgs=document.querySelectorAll('div[data-target="lightbox-content"] img');
+    if(lightboxImgs.length > 0)
+    {
+      var i=0;
+      /* while no src exists, continue to look through elements.*/
+      while(!lightboxImgs[i].src && i < lightboxImgs.length)
+      {
+        i++;
+      }
+      if(lightboxImgs[i].src != undefined)
+      {
+        return lightboxImgs[i].src;
+      }
+    }
+    return null;
+  }
+  function openImgHere(){
+    var imgurl=getPatreonURL();
+    if(imgurl != null)
+    {
+      window.location=imgurl;
+    }
+  }
+  function openImgTab(){
+    var imgurl=getPatreonURL();
+    if(imgurl != null)
+    {
+      window.open(imgurl);
+    }
+  }
+}
+
+/* =====================END PATREON DEFINES===================== */
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
