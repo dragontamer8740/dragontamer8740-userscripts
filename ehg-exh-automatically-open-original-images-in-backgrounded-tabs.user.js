@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Automatically open original images in background tabs
 // @namespace   dragontamer8740.xTabAutoOrig
-// @description Load original images if tabs are backgrounded after 3 seconds. Hooks off of my hotkey script, so it _must_ execute after it.
+// @description Load original images if tabs are backgrounded after 3 seconds. Hooks off of the hotkey script, so must execute after it.
 // @version     1
 // @include     https://exhentai.org/s/*
 // @include     http://exhentai.org/s/*
@@ -15,18 +15,26 @@
 // @include     https://exhentai.org/*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
+// @include     http://rule*.paheal.net/post/view/*
+// @include     https://rule*.paheal.net/post/view/*
+// @include     http://e621.net/post/show/*
+// @include     https://e621.net/post/show/*
 // @include     http://e621.net/posts/*
 // @include     https://e621.net/posts/*
 // @include     http://chan.sankakucomplex.com/post/show/*
 // @include     https://chan.sankakucomplex.com/post/show/*
 // @include     http://*.furaffinity.net/view/*/
 // @include     https://*.furaffinity.net/view/*/
+// @include     http://*.furaffinity.net/full/*/
+// @include     https://*.furaffinity.net/full/*/
 // @include     http://*.furaffinity.net/gallery/*/
 // @include     https://*.furaffinity.net/gallery/*/
 // @include     http://*.weasyl.com/*/submissions/*
 // @include     https://*.weasyl.com/*/submissions/*
 // @include     http://*.weasyl.com/*/submissions/*/*
 // @include     https://*.weasyl.com/*/submissions/*/*
+// @include     http://derpibooru.org/images/*
+// @include     https://derpibooru.org/images/*
 
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -58,7 +66,11 @@ else if(urlwoprot.startsWith("e621.net/posts/"))
 }
 else if (urlwoprot.startsWith("chan.sankakucomplex.com"))
 {
-  setTimeout(doFocusCheckOpen, 1500);
+  setTimeout(doFocusCheckOpen, 2250);
+}
+else if (urlwoprot.startsWith("derpibooru.org/images/"))
+{
+  setTimeout(doFocusCheckOpen, 2500);
 }
 else if (urlwoprot.startsWith("www.furaffinity.net/view/"))
 {
@@ -67,6 +79,10 @@ else if (urlwoprot.startsWith("www.furaffinity.net/view/"))
 else if(window.location.origin.endsWith("weasyl.com"))
 {
   setTimeout(doFocusCheckOpen, 3000);
+}
+else /* default */
+{
+  setTimeout(doFocusCheckOpen, 1500);
 }
 
 if(document.title=="503 Backend fetch failed")
