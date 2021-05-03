@@ -15,6 +15,8 @@
 // @include     https://exhentai.org/*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
+// @include     http://rule34.us/index.php?r=posts/view*
+// @include     https://rule34.us/index.php?r=posts/view*
 // @include     http://rule*.paheal.net/post/view/*
 // @include     https://rule*.paheal.net/post/view/*
 // @include     http://e621.net/post/show/*
