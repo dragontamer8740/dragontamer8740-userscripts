@@ -22,6 +22,8 @@
 // @include     https://e621.net/posts*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
+// @include     http://rule34.us/index.php?r=posts/view*
+// @include     https://rule34.us/index.php?r=posts/view*
 // @include     http://*.hentai-foundry.com/pictures/user/*/*/*
 // @include     http://hentai-foundry.com/pictures/user/*/*/*
 // @include     https://*.hentai-foundry.com/pictures/user/*/*/*
@@ -664,6 +666,45 @@ else if( window.location.origin.endsWith("rule34.xxx"))
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* ====================BEGIN R34.US DEFINES=================== */
+
+else if( window.location.origin.endsWith("rule34.us"))
+{
+    var dlLink=document.querySelector("ul.tag-list-left a li.character-tag");
+    if(dlLink.parentNode.tagName==="A")
+    {
+      dlLink=dlLink.parentNode.href;
+    }
+    else
+    {
+      // "unset" so that we get the error if there's a problem
+      dlLink=null;
+    }
+    function openImgTab()
+    {
+      if(dlLink){
+        window.open(dlLink);
+      }
+      else {
+        alert("Unable to fetch download link. Check the selector in the script.");
+      }
+    }
+
+    function openImgHere()
+    {
+      if(dlLink){
+        window.location=dlLink;
+      }
+      else {
+        alert("Unable to fetch download link. Check the selector in the script.");
+      }
+    }
+}
+
+/* ====================END R34.US DEFINES===================== */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /* ====================BEGIN HF DEFINES==================== */
 else if(window.location.origin.endsWith("hentai-foundry.com"))
 {
@@ -915,7 +956,7 @@ else if(window.location.origin.endsWith("rule34.paheal.net"))
     var imgLink=null;
     while(i < candidates.length)
     {
-      if(candidates[i].innerHTML==="Image Only")
+      if(candidates[i].innerHTML==="Image Only" || candidates[i].innerHTML==="File Only")
       {
         imgLink=candidates[i].href;
         i=candidates.length; /* stop iterating */
