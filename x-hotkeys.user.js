@@ -71,6 +71,8 @@
 // @include     https://*.booru.org/index.php*
 // @include     http://*.patreon.com/*
 // @include     https://*.patreon.com/*
+// @include     http://hypnohub.net/post*
+// @include     https://hypnohub.net/post*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -1247,8 +1249,53 @@ if(window.location.origin.endsWith("patreon.com"))
     }
   }
 }
-
 /* =====================END PATREON DEFINES===================== */
+
+/* ====================BEGIN HYPNOHUB DEFINES=================== */
+if(window.location.origin.endsWith("hypnohub.net"))
+{
+  function getHypnoHubURL()
+  {
+    var hireslink = document.getElementById("highres");
+    if(hireslink != null && hireslink.href)
+    {
+      return hireslink.href;
+    }
+    return null;
+  }
+  function openImgHere(){
+    var imgurl=getHypnoHubURL();
+    if(imgurl != null)
+    {
+      window.location=imgurl;
+    }
+  }
+  function openImgTab()
+  {
+    var imgurl=getHypnoHubURL();
+    if(imgurl != null)
+    {
+      window.open(imgurl);
+    }
+  }
+  function nextImg()
+  {
+    var nextbtn=document.querySelector("a.nextPage");
+    if(nextbtn)
+    {
+      window.location=nextbtn.href;
+    }
+  }
+  function prevImg()
+  {
+    var prevbtn=document.querySelector("a.previousPage");
+    if(prevbtn)
+    {
+      window.location=prevbtn.href;
+    }
+  }
+}
+/* =====================END HYPNOHUB DEFINES==================== */
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
