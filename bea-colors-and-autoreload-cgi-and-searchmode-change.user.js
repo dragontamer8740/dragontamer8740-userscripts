@@ -6,6 +6,10 @@
 // @match       http://old.bearchive.com/~addventure/*
 // @include     https://old.bearchive.com/~addventure/*
 // @match       https://old.bearchive.com/~addventure/*
+// @include     http://addventure.bearchive.com/~addventure/*
+// @match       http://addventure.bearchive.com/~addventure/*
+// @include     https://addventure.bearchive.com/~addventure/*
+// @match       https://addventure.bearchive.com/~addventure/*
 // @version     1
 // @grant       none
 // ==/UserScript==
