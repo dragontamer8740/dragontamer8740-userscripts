@@ -6,6 +6,10 @@
 // @include     https://exhentai.org/*
 // @include     http://e-hentai.org/*
 // @include     https://e-hentai.org/*
+// @include     http://upld.e-hentai.org/*
+// @include     https://upld.e-hentai.org/*
+// @include     http://upload.e-hentai.org/*
+// @include     https://upload.e-hentai.org/*
 // @include     https://repo.e-hentai.org/*
 // @include     http://repo.e-hentai.org/*
 // @version     1
@@ -80,7 +84,7 @@ h1 {
   var s = document.createElement("style");
   s.type = "text/css";
   s.innerText = `/* style ehg like X */
-                 input:not([type="checkbox"]),select,option,optgroup,textarea,input[type="button"],input[type="submit"]
+                 input:not([type="checkbox"]):not([type="radio"]),select,option,optgroup,textarea,input[type="button"],input[type="submit"]
                  {
                    font-size: 8pt !important;
                    border: initial !important;
@@ -519,4 +523,98 @@ else if(/home.php$/.test(window.location.href))
     }
     i=0;
   }
+}
+if (window.location.origin.endsWith("upld.e-hentai.org") || window.location.origin.endsWith("upload.e-hentai.org"))
+{
+  var s = document.createElement("style");
+  s.type = "text/css";
+  s.innerText = `/* uploader additional rules */
+               div[id^="cell_"] {
+                     border-radius: 0px !important;
+                     background: #34353C !important;
+                     border: 1px solid gray !important;
+               }
+               div.stuffbox {
+                     border: 1px solid gray !important;
+               }
+               td.stdk, td.stdv {
+                     border: 1px solid gray !important;
+               }
+               div.idi {
+                     border: 2px ridge #808080 !important;
+               }
+               td.ptds {
+                     background: #43464e none repeat scroll 0 0 !important;
+               }
+               table.ptt td {
+                     background: #34353b none repeat scroll 0 0 !important;
+               }
+               .gl1t:nth-child(2n+1) {
+                     background: #363940 none repeat scroll 0 0  !important;
+               }
+               .gl1t:nth-child(2n+2) {
+                     background: #3c414b none repeat scroll 0 0  !important;
+               }
+               .gl1t:nth-child(8n+1), .gl1t:nth-child(8n+3), .gl1t:nth-child(8n+6), .gl1t:nth-child(8n+8)
+               {
+                     background: #363940 none repeat scroll 0 0 !important;
+               }
+               .gl1t:nth-child(8n+2), .gl1t:nth-child(8n+4), .gl1t:nth-child(8n+5), .gl1t:nth-child(8n+7)
+               {
+                     background: #3c414b none repeat scroll 0 0 !important;
+               }
+
+
+
+               #nb {
+                     flex-flow: row !important;
+                     overflow: visible !important;
+               }
+               .gl4t {
+                     max-height: ` + titleHi + ` !important;
+                     margin: 6px 2px 0 !important;
+               }
+               .gl1t, .gl3t, .gl5t, .gl6t
+               {
+                     min-width: 0 !important;
+                     min-height: 0 !important;
+                     max-width: none !important;
+                     max-height: none !important;
+                     width: auto !important;
+                     height: auto !important;
+               }
+               .gl3t a img
+               {
+                     height: auto !important;
+                     width: auto !important;
+                     max-height: ` + thumbHi + ` !important;
+                     max-width: ` + thumbWd + ` !important;
+                     display: block !important;
+                     position: static !important;
+                     margin: 0 auto !important;
+               }
+
+               .gl5t
+               {
+                     height: 44px!important;
+               }
+               div.stuffbox
+               {
+                     background: #4F535B none repeat scroll 0 0;
+               }
+               table {
+                     background: #4F535B none repeat scroll 0 0
+               }
+               div.ido
+               {
+                     border: 1px solid #000000 !important;
+               }
+               input, select, option, optgroup, textarea
+               {
+                     background-color: #34353b !important;
+                     color: #f1f1f1 !important;
+               }
+
+  `;
+  document.head.appendChild(s);
 }
