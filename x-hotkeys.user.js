@@ -73,6 +73,8 @@
 // @include     https://*.patreon.com/*
 // @include     http://hypnohub.net/post*
 // @include     https://hypnohub.net/post*
+// @include     http://xbooru.com/index.php*
+// @include     https://xbooru.com/index.php*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -1296,6 +1298,38 @@ if(window.location.origin.endsWith("hypnohub.net"))
   }
 }
 /* =====================END HYPNOHUB DEFINES==================== */
+
+/* =====================BEGIN XBOORU DEFINES==================== */
+
+/* note: currently this code is identical to that for Gelbooru. */
+if(window.location.origin.endsWith("xbooru.com"))
+{
+    function getGBURL(){
+    var linkCandidates=document.querySelectorAll("div li a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Original image")
+      {
+        linkurl=linkCandidates[i].href;
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    return linkurl;
+  }
+  
+  function openImgHere(){
+    window.location=getGBURL();
+  }
+  function openImgTab(){
+    window.open(getGBURL());
+  }  
+}
+
+/* =====================END XBOORU DEFINES==================== */
+
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
