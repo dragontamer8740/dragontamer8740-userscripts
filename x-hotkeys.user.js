@@ -1142,7 +1142,7 @@ if(window.location.origin.endsWith("derpibooru.org"))
 /* ====================END DERPIBOORU DEFINES==================== */
 
 /* ====================BEGIN BOORU.ORG DEFINES==================== */
-if(window.location.origin.endsWith(".booru.org"))
+/*if(window.location.origin.endsWith(".booru.org"))
 {
   function getBooruOrgURL()
   {
@@ -1211,6 +1211,78 @@ if(window.location.origin.endsWith(".booru.org"))
       }
     }
   }
+  }*/
+if(window.location.origin.endsWith(".booru.org"))
+{
+    function getGBURL(){
+    var linkCandidates=document.querySelectorAll("div li a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Original image")
+      {
+        linkurl=linkCandidates[i].href;
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    return linkurl;
+  }
+  
+  function openImgHere(){
+    window.location=getGBURL();
+  }
+  function openImgTab(){
+    window.open(getGBURL());
+  }
+  
+  function nextImg(){
+    var linkCandidates=document.querySelectorAll("div li a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Next")
+      {
+        linkurl=linkCandidates[i];
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    /* we have to leech off an event listener now */
+    linkurl=linkurl.getAttribute('onclick').replace(/.*document.location=\'/, '').replace(/\';.*$/, '');
+    if(linkurl != null){
+      window.location=linkurl;
+    }
+    else {
+      console.log("Null next url");
+    }
+    
+  }
+  function prevImg(){
+    var linkCandidates=document.querySelectorAll("div li a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Previous")
+      {
+        linkurl=linkCandidates[i];
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    /* we have to leech off an event listener now */
+    linkurl=linkurl.getAttribute('onclick').replace(/.*document.location=\'/, '').replace(/\';.*$/, '');
+    if(linkurl != null){
+      window.location=linkurl;
+    }
+    else {
+      console.log("Null previous url");
+    }
+  }
+  
 }
 /* ====================END BOORU.ORG DEFINES==================== */
 
@@ -1330,6 +1402,34 @@ if(window.location.origin.endsWith("xbooru.com"))
 
 /* =====================END XBOORU DEFINES==================== */
 
+/* =====================BEGIN FURRY.BOORU.ORG DEFINES==================== */
+/* note: currently this code is identical to that for Gelbooru. */
+if(window.location.origin.endsWith("xbooru.com"))
+{
+    function getGBURL(){
+    var linkCandidates=document.querySelectorAll("div li a");
+    var i=0;
+    var linkurl="";
+    while(i<linkCandidates.length)
+    {
+      if(linkCandidates[i].innerHTML=="Original image")
+      {
+        linkurl=linkCandidates[i].href;
+        i=linkCandidates.length;
+      }
+      i++;
+    }
+    return linkurl;
+  }
+  
+  function openImgHere(){
+    window.location=getGBURL();
+  }
+  function openImgTab(){
+    window.open(getGBURL());
+  }  
+}
+/* ======================END FURRY.BOORU.ORG DEFINES===================== */
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
