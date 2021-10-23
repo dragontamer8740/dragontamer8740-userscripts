@@ -69,6 +69,8 @@
 // @include     /https://derpibooru.org/[0-9]*$/
 // @include     http://*.booru.org/index.php*
 // @include     https://*.booru.org/index.php*
+// @include     http://tbib.org/index.php*
+// @include     https://tbib.org/index.php*
 // @include     http://*.patreon.com/*
 // @include     https://*.patreon.com/*
 // @include     http://hypnohub.net/post*
@@ -1142,77 +1144,8 @@ if(window.location.origin.endsWith("derpibooru.org"))
 /* ====================END DERPIBOORU DEFINES==================== */
 
 /* ====================BEGIN BOORU.ORG DEFINES==================== */
-/*if(window.location.origin.endsWith(".booru.org"))
-{
-  function getBooruOrgURL()
-  {
-    imgobj=document.querySelector("img[alt='img']");
-    if(imgobj != null)
-    {
-      return imgobj.src;
-    }
-    return null;
-  }
-  function openImgHere(){
-    var imgurl=getBooruOrgURL();
-    if(imgurl != null)
-    {
-      window.location=imgurl;
-    }
-  }
-  function openImgTab(){
-    var imgurl=getBooruOrgURL();
-    if(imgurl != null)
-    {
-      window.open(imgurl);
-    }
-  }
-  function nextImg(){
-    var nextbtn=document.querySelector("a[alt='next']");
-    if(nextbtn)
-    {
-      window.location=nextbtn.href;
-    }
-    else {
-      var candidates=document.querySelectorAll('a');
-      var i=0;
-      var link=null;
-      while(i<candidates.length){
-        if(candidates[i].innerHTML.toLowerCase().includes('next')){
-          link=candidates[i].href;
-          i=candidates.length;
-        }
-        i++;
-      }
-      if(link != null){
-        window.location=link;
-      }
-    }
-  }
-  function prevImg(){
-    var prevbtn=document.querySelector("a[alt='back']");
-    if(prevbtn)
-    {
-      window.location=prevbtn.href;
-    }
-    else {
-      var candidates=document.querySelectorAll('a');
-      var i=0;
-      var link=null;
-      while(i<candidates.length){
-        if(candidates[i].innerHTML.toLowerCase().includes('previous')){
-          link=candidates[i].href;
-          i=candidates.length;
-        }
-        i++;
-      }
-      if(link != null){
-        window.location=link;
-      }
-    }
-  }
-  }*/
-if(window.location.origin.endsWith(".booru.org"))
+/* ===============BEGIN ALSO TBIB.ORG DEFINES=============== */
+if(window.location.origin.endsWith(".booru.org")|window.location.origin.endsWith('tbib.org'))
 {
     function getGBURL(){
     var linkCandidates=document.querySelectorAll("div li a");
