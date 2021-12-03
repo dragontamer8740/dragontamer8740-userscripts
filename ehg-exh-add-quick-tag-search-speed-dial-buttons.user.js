@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name           EHG Usual Tags Button
-// @namespace      dragontamer8740.ehgUsualTagsButton
-// @description    Add button(s) for "speed dial" fast search terms to EHG. Makes advanced search pane always be visible, too.
+// @name        EHG Usual Tags Button
+// @namespace   dragontamer8740.ehgUsualTagsButton
+// @description Add a button for "the usual" to fill in the search field with the usual.
 // @include        http://g.e-hentai.org/*
 // @include        http://e-hentai.org/*
 // @include        http://exhentai.org/*
@@ -14,8 +14,8 @@
 // @match          https://g.e-hentai.org/*
 // @match          https://e-hentai.org/*
 // @match          https://exhentai.org/*
-// @version        1
-// @grant          none
+// @version     1
+// @grant       none
 // ==/UserScript==
 
 if(document.querySelector('input[name="f_search"]')) // only if search bar exists on current page
@@ -33,7 +33,7 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
 
   function addCustomButton(buttonLabel, tagValue, tagFuncName, afterElement)
   {
-    var advSearchElements=document.querySelectorAll(".itss")[0].children[0];
+    var advSearchElements=document.querySelectorAll(".itss")[0];
     var additionalButtonScript=document.createElement("script");
     // we're making an inline script and injecting it into the page sources so buttons can use the functions. One per button, for now.
     // I think I could and should rewrite this so one function that takes parameters of tag name, etc. is passed instead.
@@ -57,16 +57,41 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
     newButton.setAttribute('value',buttonLabel);
     newButton.setAttribute('onclick', tagFuncName + '();');
     afterElement.appendChild(newButton);
-    if(afterElement.firstChild) // has at least one child already (not sure I need this anymore since refactoring, might even be nonsensical)
-    {
-      advSearchElements.children[advSearchElements.children.length-2].insertBefore(afterElement,null);
-    }
   }
 
-  var newTd=document.createElement("td"); // table cell for buttons to go into
 
-  // add all of the buttons you want here; just make sure they all use different function names (second-to-last argument).
-  // syntax (Note that insertion point can always be 'newtd,' I think):
-  //               'Button label', 'Tag to insert',    'Unique Function Name', 'Insertion point'
-  addCustomButton('English',      'l:english',        'tagAddEnglish',         newTd);
+// BUTTON ROWS GO HERE: Any additional button rows you want to create should
+// be defined right here.
+  var newButtonRow=[];
+  newButtonRow[0]=document.createElement("div"); // new row for buttons. You can make more of these if needed.
+  // newButtonRow[1]=document.createElement("div"); // example second row
+
+
+
+  // No need to edit this; it just adds the rows of buttons into the page.  
+  var elementBelow=document.querySelector('table.itss'); // the element that buttons should be positioned before.
+  var i=0;
+  while(i<newButtonRow.length) {
+    newButtonRow[i].setAttribute('class', 'customRow');
+    document.getElementById("advdiv").insertBefore(newButtonRow[i], elementBelow);
+    i++;
+  }
+  
+
+//  --- add all of the buttons you want here; just make sure they all use ----
+//  ---------- different function names (second-to-last argument). -----------
+  addCustomButton('English',     'l:english',        'addEnglishTag',  newButtonRow[0]);
+
+
+  // add stylings (you probably don't need to edit this)
+  var s = document.createElement("style");
+  s.type = "text/css";
+  s.innerText = `div.customRow {
+    text-align: left;
+  }`
+  document.head.appendChild(s);
+  // add a teeny bit of padding above buttons and below 'show advanced search'/'show file search' links
+  document.getElementById('showAdvSearchLink').parentNode.style['margin-bottom']='4px';
+  // the following line isn't strictly necessary since these links both share the same container right now.
+  // document.getElementById('showAdvSearchLink').parentNode.querySelector('a[onclick^="toggle_filesearch_pane"]').style['margin-bottom']='4px';
 }
