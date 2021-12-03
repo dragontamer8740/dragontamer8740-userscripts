@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name        EHG Usual Tags Button
-// @namespace   dragontamer8740.ehgUsualTagsButton
-// @description Add a button for "the usual" to fill in the search field with the usual.
+// @name           EHG Custom Tag Buttons
+// @namespace      dragontamer8740.ehgUsualTagsButton
+// @description    Add custom buttons to the search dialogue to quickly add tags you use frequently to the bar without typing.
 // @include        http://g.e-hentai.org/*
 // @include        http://e-hentai.org/*
 // @include        http://exhentai.org/*
