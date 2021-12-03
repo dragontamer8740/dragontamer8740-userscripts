@@ -14,8 +14,8 @@
 // @match          https://g.e-hentai.org/*
 // @match          https://e-hentai.org/*
 // @match          https://exhentai.org/*
-// @version     1
-// @grant       none
+// @version        1.1
+// @grant          none
 // ==/UserScript==
 
 if(document.querySelector('input[name="f_search"]')) // only if search bar exists on current page
