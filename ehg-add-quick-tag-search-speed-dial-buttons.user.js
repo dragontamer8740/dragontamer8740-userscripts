@@ -87,7 +87,7 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
   var s = document.createElement("style");
   s.type = "text/css";
   s.innerText = `div.customRow {
-    text-align: left;
+    text-align: right;
   }`
   document.head.appendChild(s);
   // add a teeny bit of padding above buttons and below 'show advanced search'/'show file search' links
