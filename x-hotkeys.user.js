@@ -20,6 +20,10 @@
 // @include     https://e621.net/post/show/*
 // @include     http://e621.net/posts*
 // @include     https://e621.net/posts*
+// @include     http://e926.net/post/show/*
+// @include     https://e926.net/post/show/*
+// @include     http://e926.net/posts*
+// @include     https://e926.net/posts*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
 // @include     http://rule34.us/index.php?r=posts/view*
@@ -69,14 +73,12 @@
 // @include     /https://derpibooru.org/[0-9]*$/
 // @include     http://*.booru.org/index.php*
 // @include     https://*.booru.org/index.php*
-// @include     http://tbib.org/index.php*
-// @include     https://tbib.org/index.php*
 // @include     http://*.patreon.com/*
 // @include     https://*.patreon.com/*
 // @include     http://hypnohub.net/post*
 // @include     https://hypnohub.net/post*
-// @include     http://xbooru.com/index.php*
-// @include     https://xbooru.com/index.php*
+// @include     http://www.hentai-foundry.com/search/*
+// @include     https://www.hentai-foundry.com/search/*
 // @version     1
 // @grant       unsafeWindow
 // ==/UserScript==
@@ -438,7 +440,7 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* ====================BEGIN E621 DEFINES==================== */
-else if(window.location.origin.endsWith("e621.net"))
+else if(window.location.origin.endsWith("e621.net") || window.location.origin.endsWith("e926.net"))
 {
   function nextImg()
   {
@@ -714,19 +716,41 @@ else if( window.location.origin.endsWith("rule34.us"))
 /* ====================BEGIN HF DEFINES==================== */
 else if(window.location.origin.endsWith("hentai-foundry.com"))
 {
-  function openImgTab(){
-    /* alternative selector: "section#picBox > div.boxbody > img" */
-    var img=document.querySelector("section#picBox img.center");
-    if(img.src)
-    {
-      window.open(img.src);
+  var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
+  if(urlwoprot.startsWith("hentai-foundry.com/pictures/")||urlwoprot.startsWith("www.hentai-foundry.com/pictures/"))
+  {
+    function openImgTab(){
+      /* alternative selector: "section#picBox > div.boxbody > img" */
+      var img=document.querySelector("section#picBox img.center");
+      if(img.src)
+      {
+        window.open(img.src);
+      }
+    }
+    function openImgHere(){
+      var img=document.querySelector("section#picBox img.center");
+      if(img.src)
+      {
+        window.location=img.src;
+      }
     }
   }
-  function openImgHere(){
-    var img=document.querySelector("section#picBox img.center");
-    if(img.src)
+
+  if(urlwoprot.startsWith("hentai-foundry.com/search/"))
+  {
+    function prevImg() /* search back a page */
     {
-      window.location=img.src;
+      var prevbtn=document.querySelectorAll("li.previous:not(.hidden) a");
+      if(prevbtn) { /* undefined if no matches found */
+        prevbtn[0].click();
+      }
+    }
+    function nextImg() /* search forward a page */
+    {
+      var nextbtn=document.querySelectorAll("li.next:not(.hidden) a");
+      if(nextbtn) { /* undefined if no matches found */
+        nextbtn[0].click();
+      }
     }
   }
 }
@@ -1144,78 +1168,75 @@ if(window.location.origin.endsWith("derpibooru.org"))
 /* ====================END DERPIBOORU DEFINES==================== */
 
 /* ====================BEGIN BOORU.ORG DEFINES==================== */
-/* ===============BEGIN ALSO TBIB.ORG DEFINES=============== */
-if(window.location.origin.endsWith(".booru.org")|window.location.origin.endsWith('tbib.org'))
+if(window.location.origin.endsWith(".booru.org"))
 {
-    function getGBURL(){
-    var linkCandidates=document.querySelectorAll("div li a");
-    var i=0;
-    var linkurl="";
-    while(i<linkCandidates.length)
+  function getBooruOrgURL()
+  {
+    imgobj=document.querySelector("img[alt='img']");
+    if(imgobj != null)
     {
-      if(linkCandidates[i].innerHTML=="Original image")
-      {
-        linkurl=linkCandidates[i].href;
-        i=linkCandidates.length;
-      }
-      i++;
+      return imgobj.src;
     }
-    return linkurl;
+    return null;
   }
-  
   function openImgHere(){
-    window.location=getGBURL();
+    var imgurl=getBooruOrgURL();
+    if(imgurl != null)
+    {
+      window.location=imgurl;
+    }
   }
   function openImgTab(){
-    window.open(getGBURL());
-  }
-  
-  function nextImg(){
-    var linkCandidates=document.querySelectorAll("div li a");
-    var i=0;
-    var linkurl="";
-    while(i<linkCandidates.length)
+    var imgurl=getBooruOrgURL();
+    if(imgurl != null)
     {
-      if(linkCandidates[i].innerHTML=="Next")
-      {
-        linkurl=linkCandidates[i];
-        i=linkCandidates.length;
-      }
-      i++;
+      window.open(imgurl);
     }
-    /* we have to leech off an event listener now */
-    linkurl=linkurl.getAttribute('onclick').replace(/.*document.location=\'/, '').replace(/\';.*$/, '');
-    if(linkurl != null){
-      window.location=linkurl;
+  }
+  function nextImg(){
+    var nextbtn=document.querySelector("a[alt='next']");
+    if(nextbtn)
+    {
+      window.location=nextbtn.href;
     }
     else {
-      console.log("Null next url");
+      var candidates=document.querySelectorAll('a');
+      var i=0;
+      var link=null;
+      while(i<candidates.length){
+        if(candidates[i].innerHTML.toLowerCase().includes('next')){
+          link=candidates[i].href;
+          i=candidates.length;
+        }
+        i++;
+      }
+      if(link != null){
+        window.location=link;
+      }
     }
-    
   }
   function prevImg(){
-    var linkCandidates=document.querySelectorAll("div li a");
-    var i=0;
-    var linkurl="";
-    while(i<linkCandidates.length)
+    var prevbtn=document.querySelector("a[alt='back']");
+    if(prevbtn)
     {
-      if(linkCandidates[i].innerHTML=="Previous")
-      {
-        linkurl=linkCandidates[i];
-        i=linkCandidates.length;
-      }
-      i++;
-    }
-    /* we have to leech off an event listener now */
-    linkurl=linkurl.getAttribute('onclick').replace(/.*document.location=\'/, '').replace(/\';.*$/, '');
-    if(linkurl != null){
-      window.location=linkurl;
+      window.location=prevbtn.href;
     }
     else {
-      console.log("Null previous url");
+      var candidates=document.querySelectorAll('a');
+      var i=0;
+      var link=null;
+      while(i<candidates.length){
+        if(candidates[i].innerHTML.toLowerCase().includes('previous')){
+          link=candidates[i].href;
+          i=candidates.length;
+        }
+        i++;
+      }
+      if(link != null){
+        window.location=link;
+      }
     }
   }
-  
 }
 /* ====================END BOORU.ORG DEFINES==================== */
 
@@ -1277,6 +1298,21 @@ if(window.location.origin.endsWith("hypnohub.net"))
       window.location=imgurl;
     }
   }
+  function openImgPopup(e)
+  {
+/*    if(typeof e === 'object')
+    {
+      var imgurl=getHypnoHubURL();
+      if(imgurl != null)
+      {
+        if(e.button == 0)
+        {
+          window.location=imgurl;
+        }
+      }
+      }*/
+    return;
+  }
   function openImgTab()
   {
     var imgurl=getHypnoHubURL();
@@ -1301,68 +1337,42 @@ if(window.location.origin.endsWith("hypnohub.net"))
       window.location=prevbtn.href;
     }
   }
+  var imgobj=document.getElementById("image");
+  if(imgobj)
+  {
+    imgobj.addEventListener("mouseup", openImgPopup);
+/*   imgobj.addEventListener("click", openImgHere);*/
+  }
 }
 /* =====================END HYPNOHUB DEFINES==================== */
 
-/* =====================BEGIN XBOORU DEFINES==================== */
-
-/* note: currently this code is identical to that for Gelbooru. */
-if(window.location.origin.endsWith("xbooru.com"))
+/* =================BEGIN HENTAI-FOUNDRY DEFINES================ */
+if(window.location.origin.endsWith("hentai-foundry.com"))
 {
-    function getGBURL(){
-    var linkCandidates=document.querySelectorAll("div li a");
-    var i=0;
-    var linkurl="";
-    while(i<linkCandidates.length)
+  var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
+  if(urlwoprot.startsWith("hentai-foundry.com/search/")||urlwoprot.startsWith("www.hentai-foundry.com/search/"))
+  {
+    function prevImg() /* search back a page */
     {
-      if(linkCandidates[i].innerHTML=="Original image")
-      {
-        linkurl=linkCandidates[i].href;
-        i=linkCandidates.length;
+      var prevbtn=document.querySelectorAll("li.previous:not(.hidden) a");
+      if(prevbtn) { /* undefined if no matches found */
+        prevbtn[0].click();
       }
-      i++;
     }
-    return linkurl;
+    function nextImg() /* search forward a page */
+    {
+      var nextbtn=document.querySelectorAll("li.next:not(.hidden) a");
+      if(nextbtn) { /* undefined if no matches found */
+        nextbtn[0].click();
+      }
+    }
   }
-  
-  function openImgHere(){
-    window.location=getGBURL();
-  }
-  function openImgTab(){
-    window.open(getGBURL());
-  }  
 }
 
-/* =====================END XBOORU DEFINES==================== */
 
-/* =====================BEGIN FURRY.BOORU.ORG DEFINES==================== */
-/* note: currently this code is identical to that for Gelbooru. */
-if(window.location.origin.endsWith("xbooru.com"))
-{
-    function getGBURL(){
-    var linkCandidates=document.querySelectorAll("div li a");
-    var i=0;
-    var linkurl="";
-    while(i<linkCandidates.length)
-    {
-      if(linkCandidates[i].innerHTML=="Original image")
-      {
-        linkurl=linkCandidates[i].href;
-        i=linkCandidates.length;
-      }
-      i++;
-    }
-    return linkurl;
-  }
-  
-  function openImgHere(){
-    window.location=getGBURL();
-  }
-  function openImgTab(){
-    window.open(getGBURL());
-  }  
-}
-/* ======================END FURRY.BOORU.ORG DEFINES===================== */
+/* ==================END HENTAI-FOUNDRY DEFINES================= */
+
+
 
 /* register hotkeys */
 window.addEventListener('keyup', function(event) {
