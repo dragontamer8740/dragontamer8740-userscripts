@@ -2,8 +2,10 @@
 // @name        Mario's Mansion
 // @namespace   dragontamer8740.mariosMansion
 // @description Evict Luigi
-// @include     http://forums.e-hentai.org/index.php?showtopic=*
-// @include     https://forums.e-hentai.org/index.php?showtopic=*
+// @include     http://forums.e-hentai.org/index.php?*showtopic=*
+// @include     https://forums.e-hentai.org/index.php?*showtopic=*
+// @include     https://forums.e-hentai.org/index.php?*st=*
+// @include     https://forums.e-hentai.org/index.php?*st=*
 // @version     1
 // @grant       none
 // ==/UserScript==
