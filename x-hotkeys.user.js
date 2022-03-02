@@ -340,7 +340,20 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
 {  
   // allow fullscreen func on ehg
   SITE_CAN_FULLSCREEN = false;
-  
+  /* 1 Mar 2022: ehg added some conflicting hotkeys. Disable. */
+  function listenBlock(obj, eventType, keycode)
+  {
+    obj.addEventListener(eventType, function(event) {
+      var key=event.which||event.keyCode;
+      if(key==keycode)
+      {
+        event.stopPropagation();
+        /* event.preventDefault(); */
+      }
+    }, true); /* true for event capture */
+  }
+  [ KeyEvent.DOM_VK_W, KeyEvent.DOM_VK_A, KeyEvent.DOM_VK_S, KeyEvent.DOM_VK_D ].forEach(function (a){listenBlock(document, 'keydown', a);});
+
   function nextImg()
   {
     var urlwoprot=window.location.href.replace(/(^\w+:|^)\/\//, '');
