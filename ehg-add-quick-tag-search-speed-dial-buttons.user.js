@@ -59,6 +59,24 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
     afterElement.appendChild(newButton);
   }
 
+  /* add a button, but use a user-defined JS function (more versatile, but also
+     more complicated): */
+  function addButtonCustomFunction(buttonLabel, customFuncName, afterElement, functionStr) {
+    var advSearchElements=document.querySelectorAll(".itss")[0];
+    var additionalButtonScript=document.createElement("script");
+    additionalButtonScript.innerHTML='function ' + customFuncName + `()
+    {
+      ` + functionStr + `
+      document.querySelector('input[name="f_search"]').focus();
+    }`;
+    document.body.appendChild(additionalButtonScript);
+    
+    var newButton=document.createElement('input');
+    newButton.setAttribute('type','button');
+    newButton.setAttribute('value',buttonLabel);
+    newButton.setAttribute('onclick', customFuncName + '();');
+    afterElement.appendChild(newButton);
+  }
 
 // BUTTON ROWS GO HERE: Any additional button rows you want to create should
 // be defined right here.
@@ -82,6 +100,19 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
 //  ---------- different function names (second-to-last argument). -----------
   addCustomButton('English',     'l:english',        'addEnglishTag',  newButtonRow[0]);
 
+// Example of a custom function button:
+/*
+  addButtonCustomFunction("Bad Category Toggle", 'categoryToggler', newButtonRow[0], `
+    toggle_category(1); 
+    toggle_category(64);
+    toggle_category(128);
+    // western will be automatically turned back on, but won't be automatically
+    // turned off, since it occupies a middle ground partway between good and bad.
+    if(document.getElementById('cat_512').getAttribute('data-disabled')) {
+      toggle_category(512);
+    }`
+  );
+*/
 
   // add stylings (you probably don't need to edit this)
   var s = document.createElement("style");
