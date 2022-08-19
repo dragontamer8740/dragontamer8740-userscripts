@@ -10,8 +10,6 @@
 // @match       http://addventure.bearchive.com/~addventure/*
 // @include     https://addventure.bearchive.com/~addventure/*
 // @match       https://addventure.bearchive.com/~addventure/*
-// @include     http://127.0.0.1/bea/*
-// @match       http://127.0.0.1/bea/*
 // @version     1
 // @grant       GM_getValue
 // @grant       GM.getValue
