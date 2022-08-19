@@ -20,21 +20,21 @@
 // ==/UserScript==
 
 /*
-  This script lets you navigate through choices in BEA by hitting the
-  appropriate number keys on your keyboard, eliminating the need to use a
-  mouse for most tasks.
+   This script lets you navigate through choices in BEA by hitting the
+   appropriate number keys on your keyboard, eliminating the need to use a
+   mouse for most tasks.
 
-  Other keyboard shortcuts:
+   Other keyboard shortcuts:
 
-  <- (left arrow)  : "Go back"
-  b  : "Go back"
+   <- (left arrow)  : "Go back"
+                 b  : "Go back"
 
-  -> (right arrow) : Go forward (when paging back, this script keeps a log of
-  the path you traversed so you can hopefully return to
-  your starting point). Don't depend on this behavior, it
-  will notably fail to operate correctly in some
-  situations, especially with multiple tabs.
-  
+   -> (right arrow) : Go forward (when paging back, this script keeps a log of
+                      the path you traversed so you can hopefully return to
+                      your starting point). Don't depend on this behavior, it
+                      will notably fail to operate correctly in some
+                      situations, especially with multiple tabs.
+   
 */
 
 
@@ -178,14 +178,17 @@ Object.entries({
   var i=0;
   var backindex=-1;
   var pagelinks;
+  var backCandidates = [ ];
   while(i<aa.length)
   {
-    if(aa[i].innerHTML.includes("Go back"))
-    { 
+    if(aa[i].innerHTML === "Go back")
+    {
+      backCandidates.push(i)
       backindex=i;
-      i=aa.length;
+      i=aa.length; // stop iterating
       pagelinks=aa;
     }
+    
     else {
       aa[i].addEventListener("click", 
                              function (event) {
@@ -198,6 +201,25 @@ Object.entries({
     }
     i++;
   }
+
+  backindex = backCandidates.pop();
+  /*
+     we want the LAST "go back" on the page to be the one we use... so now all
+     the other candidates need to get bindings set on them.
+   */
+  while (backCandidates.length > 0) {
+    aa[backCandidates.pop()].addEventListener("click", 
+                           function (event) {
+                             event.preventDefault();
+                             /* clear forward stack */
+                             GM.setValue("forwardPage", '');
+                             window.location = this.href;
+                           },
+                           false)
+  }
+  
+
+ 
 
   window.addEventListener('keyup', function(event) {
     //window.onkeyup = function(event) {
@@ -255,7 +277,7 @@ Object.entries({
               if(navto) {
                 window.location=navto;
               }
-              /*              alert(JSON.stringify(nextpage));*/
+/*              alert(JSON.stringify(nextpage));*/
             }
             break;
           }
