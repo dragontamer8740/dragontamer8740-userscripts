@@ -15,6 +15,23 @@
 // ==/UserScript==
 
 /*
+   This script lets you navigate through choices in BEA by hitting the
+   appropriate number keys on your keyboard, eliminating the need to use a
+   mouse for most tasks.
+
+   1                : Option 1
+   2                : Option 2
+   ...
+   6                : Option 6
+
+   Other keyboard shortcuts:
+
+   <- (left arrow)  : "Go back"
+                 b  : "Go back"
+   
+*/
+
+/*
  * list of "all 'a'" tags (links) on the page
  */
 var aa = document.querySelectorAll('a');
