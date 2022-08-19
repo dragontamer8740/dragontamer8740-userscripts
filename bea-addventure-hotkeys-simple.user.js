@@ -1,28 +1,51 @@
 // ==UserScript==
-// @name        BE Addventure Option Hotkeys
-// @namespace   dragontamer8740.bearchivehotkeys
+// @name        BE Addventure Option Hotkeys - Simple
+// @namespace   dragontamer8740.bearchivehotkeys.simple
 // @description Add keybindings for selecting where to go.
 // @include     http://old.bearchive.com/~addventure/*
 // @match       http://old.bearchive.com/~addventure/*
 // @include     https://old.bearchive.com/~addventure/*
 // @match       https://old.bearchive.com/~addventure/*
+// @include     http://addventure.bearchive.com/~addventure/*
+// @match       http://addventure.bearchive.com/~addventure/*
+// @include     https://addventure.bearchive.com/~addventure/*
+// @match       https://addventure.bearchive.com/~addventure/*
 // @version     1
 // @grant       none
 // ==/UserScript==
 
-var aa=document.querySelectorAll('a');
-var i=0;
-var backindex=-1;
+/*
+ * list of "all 'a'" tags (links) on the page
+ */
+var aa = document.querySelectorAll('a');
+
+/*
+ * general-purpose iterator
+ */
+var i = aa.length - 1;
+
+/*
+ * index (result number) in list of all links to use for going back
+ */
+var backindex = -1;
+
+/*
+ * This gets set if we found "Go back" and it looks to be a proper addventure
+ * page. I forget why I did it this way now, but it works, so whatever.
+ */
 var pagelinks;
-while(i<aa.length)
-{
-  if(aa[i].innerHTML.includes("Go back"))
-  { 
+
+while(i >= 0) {
+  if(aa[i].innerHTML === ("Go back"))
+  {
     backindex=i;
-    i=aa.length;
-    pagelinks=aa;
+    i = 0; /* stop iterating (i will be set to -1 by outer loop) */
   }
-  i++;
+  i--;
+}
+
+if(backindex >= 0) { /* found at least one match */
+  pagelinks = aa; /* let key binding bit know this is probably a valid page */
 }
 
 window.addEventListener('keyup', function(event) {
