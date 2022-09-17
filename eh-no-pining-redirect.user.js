@@ -6,6 +6,7 @@
 // @include     https://e-hentai.org/s/*
 // @include     http://exhentai.org/s/*
 // @include     https://exhentai.org/s/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/s/*
 // @version     1
 // @grant       none
 // @run-at      document-start

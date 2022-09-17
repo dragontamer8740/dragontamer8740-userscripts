@@ -4,6 +4,7 @@
 // @description Make image start at top of display. Adds keybindings for fitting to height, width, original size.
 // @include     https://exhentai.org/s/*
 // @include     http://exhentai.org/s/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/s/*
 // @include     https://e-hentai.org/s/*
 // @include     http://e-hentai.org/s/*
 // @version     1

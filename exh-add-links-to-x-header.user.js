@@ -3,10 +3,12 @@
 // @namespace   dragontamer8740.exhWikiLink
 // @description Add links to the wiki, forum, news, and user home pages to X
 // @version     1
-// @include        http://exhentai.org/*
-// @include        https://exhentai.org/*
-// @match          http://exhentai.org/*
-// @match          https://exhentai.org/*
+// @include     http://exhentai.org/*
+// @include     https://exhentai.org/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
+// @match       http://exhentai.org/*
+// @match       https://exhentai.org/*
+// @match       http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @grant       none
 // ==/UserScript==
 

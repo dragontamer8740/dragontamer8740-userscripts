@@ -2,18 +2,20 @@
 // @name        Thumbnail height set
 // @namespace   dragontamer8740.thumbHeight
 // @description changes thumbnail height to allow more text in results. use along with usercontent.css.
-// @include        http://g.e-hentai.org/*                                      
-// @include        http://e-hentai.org/*                                        
-// @include        http://exhentai.org/*                                        
-// @include        https://g.e-hentai.org/*                                     
-// @include        https://e-hentai.org/*                                       
-// @include        https://exhentai.org/*                                       
-// @match          http://g.e-hentai.org/*                                      
-// @match          http://e-hentai.org/*                                        
-// @match          http://exhentai.org/*                                        
-// @match          https://g.e-hentai.org/*                                     
-// @match          https://e-hentai.org/*                                       
-// @match          https://exhentai.org/*  
+// @include     http://g.e-hentai.org/*
+// @include     http://e-hentai.org/*
+// @include     http://exhentai.org/*
+// @include     https://g.e-hentai.org/*
+// @include     https://e-hentai.org/*
+// @include     https://exhentai.org/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
+// @match       http://g.e-hentai.org/*
+// @match       http://e-hentai.org/*
+// @match       http://exhentai.org/*
+// @match       https://g.e-hentai.org/*
+// @match       https://e-hentai.org/*
+// @match       https://exhentai.org/*
+// @match       http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @version     1
 // @grant       none
 // ==/UserScript==

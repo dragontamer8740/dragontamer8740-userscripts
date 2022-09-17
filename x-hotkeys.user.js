@@ -12,6 +12,9 @@
 // @include     http://e-hentai.org/g/*
 // @include     http://exhentai.org/*
 // @include     https://exhentai.org/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/g/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/s/*
 // @include     https://inkbunny.net/s/*
 // @include     http://inkbunny.net/s/*
 // @include     https://inkbunny.net/submissionview.php*

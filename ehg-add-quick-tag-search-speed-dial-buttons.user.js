@@ -8,12 +8,14 @@
 // @include        https://g.e-hentai.org/*
 // @include        https://e-hentai.org/*
 // @include        https://exhentai.org/*
+// @include        http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @match          http://g.e-hentai.org/*
 // @match          http://e-hentai.org/*
 // @match          http://exhentai.org/*
 // @match          https://g.e-hentai.org/*
 // @match          https://e-hentai.org/*
 // @match          https://exhentai.org/*
+// @match          http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @version        1.1
 // @grant          none
 // ==/UserScript==

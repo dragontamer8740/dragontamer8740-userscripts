@@ -13,6 +13,7 @@
 // @include     http://e-hentai.org/g/*
 // @include     http://exhentai.org/*
 // @include     https://exhentai.org/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @include     http://rule34.xxx/index.php*
 // @include     https://rule34.xxx/index.php*
 // @include     http://rule34.us/index.php?r=posts/view*

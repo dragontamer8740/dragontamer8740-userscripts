@@ -6,6 +6,7 @@
 // @include     https://exhentai.org/*
 // @include     http://e-hentai.org/*
 // @include     https://e-hentai.org/*
+// @include     http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @include     http://upld.e-hentai.org/*
 // @include     https://upld.e-hentai.org/*
 // @include     http://upload.e-hentai.org/*
@@ -91,6 +92,10 @@ h1 {
                    border-radius: initial !important;
                    background-color: #34353b !important;
                    -moz-appearance: none !important;
+               }
+               .tagcomplete-items div {
+                   background-color: #34353b !important;
+                   border: 1px solid gray !important;
                }
 
                body {
