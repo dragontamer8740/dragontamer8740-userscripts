@@ -17,11 +17,15 @@
 // @match          https://exhentai.org/*
 // @match          http://exhentai55ld2wyap5juskbm67czulomrouspdacjamjeloj7ugjbsad.onion/*
 // @version        1.1
+// @run-at         document-idle
 // @grant          none
 // ==/UserScript==
 
-if(document.querySelector('input[name="f_search"]')) // only if search bar exists on current page
+var searchBox=document.querySelector('input[name="f_search"]');
+if(searchBox) // only if search bar exists on current page
 {
+  /* make 'clear filter' button just erase text in the input box instead of reloading the page */
+  document.querySelector('input[value="Clear Filter"]').setAttribute("onClick", 'document.querySelector(\'input[name="f_search"]\').value=\'\'');
   if(!document.getElementById("showAdvSearchLink"))
   {
     document.querySelector('a[onclick="toggle_advsearch_pane(this); return false"]').setAttribute("id", "showAdvSearchLink");
@@ -35,49 +39,63 @@ if(document.querySelector('input[name="f_search"]')) // only if search bar exist
 
   function addCustomButton(buttonLabel, tagValue, tagFuncName, afterElement)
   {
-    var advSearchElements=document.querySelectorAll(".itss")[0];
-    var additionalButtonScript=document.createElement("script");
-    // we're making an inline script and injecting it into the page sources so buttons can use the functions. One per button, for now.
-    // I think I could and should rewrite this so one function that takes parameters of tag name, etc. is passed instead.
-    // add a script to the dom so I can call it with a button
-    additionalButtonScript.innerHTML='function ' + tagFuncName + `()
-    {
-      if (document.querySelector('input[name="f_search"]').value == '')
+    var btnId=tagValue.replace(/:/g,'_');
+    /* navigating back to an old page in firefox sometimes leaves the buttons
+       from the last run existant. So don't add if they already exist.*/
+    if(!document.getElementById(btnId)) {
+      var advSearchElements=document.querySelectorAll(".itss")[0];
+      var additionalButtonScript=document.createElement("script");
+      // we're making an inline script and injecting it into the page sources so buttons can use the functions. One per button, for now.
+      // I think I could and should rewrite this so one function that takes parameters of tag name, etc. is passed instead.
+      // add a script to the dom so I can call it with a button
+      additionalButtonScript.innerHTML='function ' + tagFuncName + `()
       {
-        document.querySelector('input[name="f_search"]').value += '` + tagValue + `';
-      }  //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
-      else if (!(document.querySelector('input[name="f_search"]').value.toUpperCase().includes('` + tagValue + `'.toUpperCase())))
-      {
-        document.querySelector('input[name="f_search"]').value += ' ` + tagValue + `';
-      }
-      document.querySelector('input[name="f_search"]').focus();
-    }`;
-    document.body.appendChild(additionalButtonScript);
-    
-    var newButton=document.createElement('input');
-    newButton.setAttribute('type','button');
-    newButton.setAttribute('value',buttonLabel);
-    newButton.setAttribute('onclick', tagFuncName + '();');
-    afterElement.appendChild(newButton);
+        if (document.querySelector('input[name="f_search"]').value == '')
+        {
+          document.querySelector('input[name="f_search"]').value += '` + tagValue + `';
+        }  //if it's already in the search field (case insensitive), don't do anything. Otherwise, add it to the end.
+        else if (!(document.querySelector('input[name="f_search"]').value.toUpperCase().includes('` + tagValue + `'.toUpperCase())))
+        {
+          document.querySelector('input[name="f_search"]').value += ' ` + tagValue + `';
+        }
+        document.querySelector('input[name="f_search"]').focus();
+      }`;
+      document.body.appendChild(additionalButtonScript);
+      
+      var newButton=document.createElement('input');
+      newButton.setAttribute('type','button');
+      newButton.setAttribute('value',buttonLabel);
+      newButton.setAttribute('onclick', tagFuncName + '();');
+      afterElement.appendChild(newButton);
+    }
   }
 
   /* add a button, but use a user-defined JS function (more versatile, but also
      more complicated): */
   function addButtonCustomFunction(buttonLabel, customFuncName, afterElement, functionStr) {
-    var advSearchElements=document.querySelectorAll(".itss")[0];
-    var additionalButtonScript=document.createElement("script");
-    additionalButtonScript.innerHTML='function ' + customFuncName + `()
-    {
-      ` + functionStr + `
-      document.querySelector('input[name="f_search"]').focus();
-    }`;
-    document.body.appendChild(additionalButtonScript);
-    
-    var newButton=document.createElement('input');
-    newButton.setAttribute('type','button');
-    newButton.setAttribute('value',buttonLabel);
-    newButton.setAttribute('onclick', customFuncName + '();');
-    afterElement.appendChild(newButton);
+    var btnId="btn" + customFuncName;
+    if(!document.getElementById(btnId)) {
+      var advSearchElements=document.querySelectorAll(".itss")[0];
+      var additionalButtonScript=document.createElement("script");
+      // we're making an inline script and injecting it into the page sources
+      // so buttons can use the functions. One per button, for now.
+      // I think I could and should rewrite this so one function that takes
+      // parameters of tag name, etc. is passed instead.
+      // add a script to the dom so I can call it with a button
+      additionalButtonScript.innerHTML='function ' + customFuncName + `()
+      {
+        ` + functionStr + `
+        document.querySelector('input[name="f_search"]').focus();
+      }`;
+      document.body.appendChild(additionalButtonScript);
+      
+      var newButton=document.createElement('input');
+      newButton.setAttribute('id',btnId);
+      newButton.setAttribute('type','button');
+      newButton.setAttribute('value',buttonLabel);
+      newButton.setAttribute('onclick', customFuncName + '();');
+      afterElement.appendChild(newButton);
+    }
   }
 
 // BUTTON ROWS GO HERE: Any additional button rows you want to create should
