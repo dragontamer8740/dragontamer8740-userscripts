@@ -388,12 +388,12 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
   }
   function nextPgXThumb(){ /* go to next page of thumbnails for a gallery on ehg */
     //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
-    var candidates=document.getElementsByTagName("a");
+    var candidates=document.querySelectorAll(".searchnav a");
     var i=0;
     var nextPgLink=null;
     while(i < candidates.length)
     {
-      if(candidates[i].innerHTML==="&gt;")
+      if(candidates[i].innerHTML==="Next &gt;" || candidates[i].innerHTML==="&gt;")
       {
         nextPgLink=candidates[i].href;
         i=candidates.length; /* stop iterating */
@@ -408,12 +408,12 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
   }
   function prevPgXThumb(){ /* go to previous page of thumbnails for a gallery on ehg */
     //    var candidates=document.querySelectorAll("a"); /* wish I knew a better css selector */
-    var candidates=document.getElementsByTagName("a");
+    var candidates=document.querySelectorAll(".searchnav a");
     var i=0;
     var prevPgLink=null;
     while(i < candidates.length)
     {
-      if(candidates[i].innerHTML==="&lt;")
+      if(candidates[i].innerHTML==="&lt; Prev" || candidates[i].innerHTML==="&lt;")
       {
         prevPgLink=candidates[i].href;
         i=candidates.length; /* stop iterating */
@@ -447,7 +447,10 @@ else if( Boolean(window.location.origin.endsWith("exhentai.org") | window.locati
     else
     {
       // full image is already being viewed; there is no "download original" button
-      window.location=document.querySelector("div#i3 > a > img").src;
+      var imglink=document.querySelector("div#i3 > a > img");
+      if(imglink) {
+        window.location=imglink.src;
+      }
     }
   }
 }
