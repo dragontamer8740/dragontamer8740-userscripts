@@ -21,9 +21,10 @@ var definitionScript = document.createElement("script");
  * selected_tag.replace(/[a-z]+:\s?/gi,\"\") */
 
 // tag_define() in new window/tab instead of popup
-definitionScript.innerHTML="function tag_define(){window.open(\"https://ehwiki.org/wiki/\"+selected_tag.replace(/[a-z]+:/gi,\"\"))}" + "\n";
+// 2023: selected_tag renamed to selected_tagname
+definitionScript.innerHTML="function tag_define(){window.open(\"https://ehwiki.org/wiki/\"+selected_tagname.replace(/[a-z]+:/gi,\"\"))}" + "\n";
 //tag_show_galleries() in new window/tab instead of current window/tab
-definitionScript.innerHTML+="function tag_show_galleries(){window.open(base_url+\"tag/\"+selected_tag.replace(/ /g,\"+\"))}";
+definitionScript.innerHTML+="function tag_show_galleries(){window.open(base_url+\"tag/\"+selected_tagname.replace(/ /g,\"+\"))}";
 // supersede the original definitions of tag_define() and tag_show_galleries()
 document.body.appendChild(definitionScript); 
 // no longer needed as a variable, since it's now present in the page itself:
